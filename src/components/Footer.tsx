@@ -14,33 +14,6 @@ export default function Footer() {
   return (
     <footer className="bg-slate-900 border-t border-slate-800 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Banner Khusus Dosen - SANGAT DIBUAT MENONJOL */}
-        <div className="bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 rounded-3xl p-1 relative overflow-hidden mb-16 shadow-2xl shadow-orange-500/30 transform hover:-translate-y-2 transition-all duration-300">
-          {/* Efek mengkilap animasi */}
-          <div className="absolute inset-0 bg-white/20 w-[200%] h-full skew-x-[-45deg] -ml-[100%] animate-[shine_3s_infinite]"></div>
-          
-          <div className="bg-slate-900 rounded-[1.4rem] p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-            <div className="flex items-center gap-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-orange-500/50 anim-bounce">
-                <GraduationCap className="w-10 h-10" />
-              </div>
-              <div>
-                <span className="inline-block px-3 py-1 bg-amber-500/20 text-amber-400 text-xs font-black tracking-widest uppercase rounded-full mb-3 border border-amber-500/30">Khusus Dosen Penilai</span>
-                <h3 className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-orange-400 mb-2">Simulasi Panel Admin</h3>
-                <p className="text-slate-300 text-sm md:text-base max-w-lg leading-relaxed font-medium">
-                  Bapak/Ibu Dosen dapat mencoba mengunggah materi, membuat kuis, dan membalas forum siswa tanpa perlu melakukan registrasi.
-                </p>
-              </div>
-            </div>
-            <button 
-              onClick={loginAsLecturer}
-              className="w-full md:w-auto px-10 py-5 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-900 font-black text-lg rounded-xl transition-all shadow-[0_0_30px_rgba(245,158,11,0.6)] hover:shadow-[0_0_50px_rgba(245,158,11,0.8)] hover:scale-105 flex-shrink-0 flex items-center justify-center gap-3 group relative overflow-hidden"
-            >
-              <span>Masuk 1-Klik (Guest)</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-        </div>
 
         {/* Main Footer Content */}
         <div className="grid md:grid-cols-4 gap-12 mb-16">
