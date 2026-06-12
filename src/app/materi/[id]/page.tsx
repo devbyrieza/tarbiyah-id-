@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation'
 import { supabase, Material } from '@/lib/supabase'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
-import { ArrowLeft, Video, FileText } from 'lucide-react'
+import { ArrowLeft, Video, FileText, ArrowRight } from 'lucide-react'
 
 export default function MateriPage() {
   const { id } = useParams<{ id: string }>()
@@ -65,8 +65,33 @@ export default function MateriPage() {
 
           <div className="p-8 md:p-12">
             <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">{material.title}</h1>
-            <p className="text-slate-500 text-lg mb-8 leading-relaxed border-b border-slate-100 pb-8">{material.description}</p>
+            {material.description && <p className="text-slate-500 text-lg mb-8 leading-relaxed border-b border-slate-100 pb-8">{material.description}</p>}
             
+            {material.type === 'article' && material.content_url && (
+              <div className="mb-8">
+                <div className="p-6 bg-blue-50 border border-blue-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm">
+                      <FileText className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-slate-900">Lampiran Materi Utama</h3>
+                      <p className="text-sm text-slate-600">Klik tombol di samping untuk mengunduh atau membaca dokumen.</p>
+                    </div>
+                  </div>
+                  <a href={material.content_url} target="_blank" rel="noreferrer" className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all shadow-md flex items-center gap-2 w-full md:w-auto justify-center">
+                    Buka File Materi <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
+                
+                {material.content_url.toLowerCase().includes('.pdf') && (
+                  <div className="mt-8 aspect-[1/1.4] w-full bg-slate-100 rounded-2xl overflow-hidden border border-slate-200">
+                    <iframe src={material.content_url} className="w-full h-full" />
+                  </div>
+                )}
+              </div>
+            )}
+
             {material.type === 'article' && material.content_text && (
               <div className="prose prose-lg prose-slate prose-headings:text-slate-900 prose-headings:font-bold prose-p:text-slate-700 prose-li:text-slate-700 prose-a:text-teal-600 max-w-none">
                 <ReactMarkdown>{material.content_text}</ReactMarkdown>

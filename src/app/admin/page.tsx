@@ -210,15 +210,30 @@ function OverviewTab({ stats, loading }: { stats: any, loading: boolean }) {
 function ArticlesTab({ materials, onDelete, onRefresh, isGuest }: { materials: Material[], onDelete: (id:string)=>void, onRefresh: ()=>void, isGuest: boolean }) {
   const [showForm, setShowForm] = useState(false)
   const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
   const [content, setContent] = useState('')
+  const [file, setFile] = useState<File | null>(null)
+  const [uploadType, setUploadType] = useState<'markdown' | 'file'>('markdown')
   const [saving, setSaving] = useState(false)
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
-    await supabase.from('materials').insert([{ title, description, type: 'article', content_text: content }])
-    setTitle(''); setDescription(''); setContent(''); setShowForm(false)
+    let content_url = null
+    let content_text = content
+
+    if (uploadType === 'file' && file) {
+      const ext = file.name.split('.').pop()
+      const path = `${Date.now()}.${ext}`
+      const { error } = await supabase.storage.from('learning-files').upload(path, file)
+      if (!error) {
+        const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
+        content_url = data.publicUrl
+        content_text = '' // no markdown if file is uploaded
+      }
+    }
+
+    await supabase.from('materials').insert([{ title, description: '', type: 'article', content_text, content_url }])
+    setTitle(''); setContent(''); setFile(null); setShowForm(false)
     onRefresh(); setSaving(false)
   }
 
@@ -237,17 +252,29 @@ function ArticlesTab({ materials, onDelete, onRefresh, isGuest }: { materials: M
         <form onSubmit={save} className="bg-white border border-slate-200 shadow-sm rounded-3xl p-8 mb-8 space-y-5">
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-2">Judul Artikel</label>
-            <input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="Contoh: Rukun Sholat Lengkap" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10 transition-all" />
+            <input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="Contoh: Rukun Islam Lengkap" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10 transition-all" />
           </div>
+          
+          <div className="flex gap-4">
+            <button type="button" onClick={() => setUploadType('markdown')} className={`flex flex-1 items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border transition-all ${uploadType==='markdown' ? 'bg-teal-50 border-teal-200 text-teal-600 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}><FileText className="w-4 h-4" /> Tulis Manual (Teks)</button>
+            <button type="button" onClick={() => setUploadType('file')} className={`flex flex-1 items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border transition-all ${uploadType==='file' ? 'bg-blue-50 border-blue-200 text-blue-600 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}><FolderUp className="w-4 h-4" /> Upload File Materi (PDF/Word)</button>
+          </div>
+
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Deskripsi Singkat</label>
-            <input required value={description} onChange={e=>setDescription(e.target.value)} placeholder="Ringkasan tentang artikel ini..." className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10 transition-all" />
+            {uploadType === 'markdown' ? (
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Isi Artikel (Markdown)</label>
+                <textarea required={uploadType === 'markdown'} value={content} onChange={e=>setContent(e.target.value)} placeholder="Tulis konten dengan format Markdown..." rows={12} className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm font-mono focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10 transition-all resize-none leading-relaxed" />
+              </div>
+            ) : (
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">Pilih File Materi</label>
+                <input required={uploadType === 'file'} type="file" onChange={e=>setFile(e.target.files?.[0]||null)} className="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-600 file:text-sm file:font-bold hover:file:bg-blue-100 transition-all" />
+              </div>
+            )}
           </div>
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Isi Artikel (Markdown)</label>
-            <textarea required value={content} onChange={e=>setContent(e.target.value)} placeholder="Tulis konten dengan format Markdown..." rows={12} className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm font-mono focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10 transition-all resize-none leading-relaxed" />
-          </div>
-          <button disabled={saving} type="submit" className="px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm shadow-md disabled:opacity-50 transition-all w-full sm:w-auto">
+          
+          <button disabled={saving} type="submit" className="px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm shadow-md disabled:opacity-50 transition-all w-full sm:w-auto mt-4">
             {saving ? 'Menyimpan...' : '✓ Publikasikan Artikel'}
           </button>
         </form>
@@ -258,7 +285,9 @@ function ArticlesTab({ materials, onDelete, onRefresh, isGuest }: { materials: M
           <div key={m.id} className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-teal-400 transition-colors">
             <div>
               <h3 className="text-slate-900 font-bold text-lg mb-1">{m.title}</h3>
-              <p className="text-slate-500 text-sm mb-3">{m.description}</p>
+              <p className="text-slate-500 text-sm mb-3">
+                {m.content_url ? '📄 Berisi Lampiran File Materi' : '📝 Artikel Teks (Manual)'}
+              </p>
               <span className="inline-block px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-lg">
                 {new Date(m.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'})}
               </span>
