@@ -44,15 +44,15 @@ export default function Tujuan() {
           <ul className="space-y-6">
             <li className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-white text-teal-600 flex items-center justify-center font-bold flex-shrink-0 mt-1">1</div>
-              <p className="text-white text-lg font-medium leading-relaxed">Siswa dapat <strong className="text-amber-300">menjelaskan pengertian</strong> sholat wajib dan dasar hukumnya dengan benar.</p>
+              <p className="text-white text-lg font-medium leading-relaxed">Siswa dapat <strong className="text-amber-300">menjelaskan pengertian</strong> ajaran Islam dan dasar hukumnya dengan benar.</p>
             </li>
             <li className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-white text-teal-600 flex items-center justify-center font-bold flex-shrink-0 mt-1">2</div>
-              <p className="text-white text-lg font-medium leading-relaxed">Siswa mampu <strong className="text-amber-300">mengidentifikasi syarat dan rukun</strong> sholat secara berurutan tanpa tertukar.</p>
+              <p className="text-white text-lg font-medium leading-relaxed">Siswa mampu <strong className="text-amber-300">mengidentifikasi syarat dan rukun</strong> ajaran Islam dalam kehidupan sehari-hari.</p>
             </li>
             <li className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-white text-teal-600 flex items-center justify-center font-bold flex-shrink-0 mt-1">3</div>
-              <p className="text-white text-lg font-medium leading-relaxed">Siswa dapat <strong className="text-amber-300">mempraktikkan gerakan dan bacaan</strong> sholat dengan tuma'ninah dan khusyuk.</p>
+              <p className="text-white text-lg font-medium leading-relaxed">Siswa dapat <strong className="text-amber-300">mempraktikkan gerakan dan bacaan</strong> ibadah dengan baik, benar, dan penuh kesadaran.</p>
             </li>
           </ul>
         </div>

@@ -5,11 +5,11 @@ import { supabase, LeaderboardEntry } from '@/lib/supabase'
 import { ClipboardList, GraduationCap, Trophy, Star, BookOpen, Lightbulb, RefreshCw, Rocket, Medal } from 'lucide-react'
 
 const questions = [
-  { text: 'Apa syarat wajib sholat yang paling utama?', options: ['Baligh dan Berakal', 'Punya uang', 'Sedang bepergian', 'Sudah menikah'], correct: 0 },
-  { text: 'Gerakan apa yang mengakhiri ibadah sholat?', options: ['Takbir', 'Ruku\'', 'Salam', 'Sujud'], correct: 2 },
-  { text: 'Berikut ini adalah hal yang membatalkan sholat, kecuali...', options: ['Makan dan minum', 'Tertawa terbahak-bahak', 'Menangis karena takut kepada Allah', 'Terbuka aurat sengaja'], correct: 2 },
-  { text: 'Membaca surat Al-Fatihah dalam sholat hukumnya...', options: ['Sunnah Ab\'adl', 'Rukun', 'Sunnah Hai\'at', 'Mubah'], correct: 1 },
-  { text: 'Apa tujuan utama dari ibadah sholat menurut Surat Al-Ankabut: 45?', options: ['Mendapat rezeki', 'Mencegah perbuatan keji dan mungkar', 'Dihargai orang lain', 'Menjadi sehat'], correct: 1 }
+  { text: 'Apa rukun Islam yang pertama?', options: ['Membaca Syahadat', 'Mendirikan Sholat', 'Membayar Zakat', 'Puasa Ramadhan'], correct: 0 },
+  { text: 'Kitab suci yang diturunkan kepada Nabi Muhammad SAW adalah...', options: ['Taurat', 'Zabur', 'Al-Quran', 'Injil'], correct: 2 },
+  { text: 'Malaikat yang bertugas menyampaikan wahyu adalah...', options: ['Malaikat Mikail', 'Malaikat Jibril', 'Malaikat Israfil', 'Malaikat Izrail'], correct: 1 },
+  { text: 'Puasa wajib bagi umat Islam dilaksanakan pada bulan...', options: ['Syawal', 'Rajab', 'Ramadhan', 'Muharram'], correct: 2 },
+  { text: 'Nabi yang mendapat gelar Khatamul Anbiya (Penutup Para Nabi) adalah...', options: ['Nabi Musa AS', 'Nabi Isa AS', 'Nabi Ibrahim AS', 'Nabi Muhammad SAW'], correct: 3 }
 ]
 
 export default function Evaluasi() {
