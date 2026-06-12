@@ -2,9 +2,17 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { BookOpenCheck, Menu, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const router = useRouter()
+
+  const loginAsGuest = (e: React.MouseEvent) => {
+    e.preventDefault()
+    localStorage.setItem('pai_admin_token', 'dosen-guest-2026')
+    router.push('/admin')
+  }
 
   return (
     <div className="fixed w-full z-50">
@@ -13,9 +21,9 @@ export default function Navbar() {
         <span className="flex items-center gap-2">
           <span>🎓</span> Khusus Dosen Penguji: Silakan akses Simulasi Panel Admin PAI
         </span>
-        <Link href="/admin/login" className="bg-slate-900 text-amber-400 px-4 py-1 rounded-full text-xs hover:bg-slate-800 transition-all shadow-md flex items-center gap-1">
+        <button onClick={loginAsGuest} className="bg-slate-900 text-amber-400 px-4 py-1 rounded-full text-xs hover:bg-slate-800 transition-all shadow-md flex items-center gap-1">
           Masuk 1-Klik (Guest) &rarr;
-        </Link>
+        </button>
       </div>
       
       {/* Navbar Utama */}
