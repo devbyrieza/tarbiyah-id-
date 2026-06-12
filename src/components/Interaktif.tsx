@@ -4,22 +4,22 @@ import { fireConfetti, playCorrect, playWrong, playWin } from '@/lib/utils'
 
 import { Gamepad, Star, Sparkles, PartyPopper, CheckCircle2, XCircle, GripVertical, Check, ListChecks } from 'lucide-react'
 
-type Item = { id: string; content: string; type: 'rukun' | 'sunnah' }
+type Item = { id: string; content: string; type: 'islam' | 'iman' }
 
 const initialItems: Item[] = [
-  { id: '1', content: 'Membaca Al-Fatihah', type: 'rukun' },
-  { id: '2', content: 'Membaca doa iftitah', type: 'sunnah' },
-  { id: '3', content: 'Takbiratul Ihram', type: 'rukun' },
-  { id: '4', content: 'Mengangkat tangan saat takbir', type: 'sunnah' },
-  { id: '5', content: 'Ruku\' dengan tuma\'ninah', type: 'rukun' },
-  { id: '6', content: 'Membaca surat pendek', type: 'sunnah' },
+  { id: '1', content: 'Membaca Dua Kalimat Syahadat', type: 'islam' },
+  { id: '2', content: 'Iman kepada Malaikat-Malaikat Allah', type: 'iman' },
+  { id: '3', content: 'Mendirikan Sholat 5 Waktu', type: 'islam' },
+  { id: '4', content: 'Iman kepada Kitab-Kitab Allah', type: 'iman' },
+  { id: '5', content: 'Menunaikan Zakat', type: 'islam' },
+  { id: '6', content: 'Iman kepada Hari Kiamat', type: 'iman' },
 ]
 
 export default function Interaktif() {
   const [items, setItems] = useState<Item[]>([])
   const [boxes, setBoxes] = useState<{ id: string; items: Item[] }[]>([
-    { id: 'rukun', items: [] },
-    { id: 'sunnah', items: [] },
+    { id: 'islam', items: [] },
+    { id: 'iman', items: [] },
   ])
   const [feedback, setFeedback] = useState<{ msg: string; isError: boolean } | null>(null)
   const ref = useRef<HTMLDivElement>(null)
@@ -46,7 +46,7 @@ export default function Interaktif() {
 
     if (item.type !== boxId) {
       playWrong()
-      setFeedback({ msg: `Ops! "${item.content}" bukan bagian dari ${boxId === 'rukun' ? 'Rukun' : 'Sunnah'}.`, isError: true })
+      setFeedback({ msg: `Ops! "${item.content}" bukan bagian dari Rukun ${boxId === 'islam' ? 'Islam' : 'Iman'}.`, isError: true })
       setTimeout(() => setFeedback(null), 3000)
       return
     }
@@ -57,7 +57,7 @@ export default function Interaktif() {
     setBoxes((prev) =>
       prev.map((b) => (b.id === boxId ? { ...b, items: [...b.items, item] } : b))
     )
-    setFeedback({ msg: `Benar! "${item.content}" ditambahkan ke ${boxId === 'rukun' ? 'Rukun' : 'Sunnah'}.`, isError: false })
+    setFeedback({ msg: `Benar! "${item.content}" ditambahkan ke Rukun ${boxId === 'islam' ? 'Islam' : 'Iman'}.`, isError: false })
     setTimeout(() => setFeedback(null), 2000)
 
     if (newItems.length === 0) {
@@ -131,12 +131,12 @@ export default function Interaktif() {
               >
                 <div className="flex items-center gap-3 mb-6 pb-6 border-b border-slate-100">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-sm ${
-                    box.id === 'rukun' ? 'bg-amber-100 text-amber-600' : 'bg-teal-100 text-teal-600'
+                    box.id === 'islam' ? 'bg-amber-100 text-amber-600' : 'bg-teal-100 text-teal-600'
                   }`}>
-                    {box.id === 'rukun' ? <Star className="w-6 h-6" /> : <Sparkles className="w-6 h-6" />}
+                    {box.id === 'islam' ? <Star className="w-6 h-6" /> : <Sparkles className="w-6 h-6" />}
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 text-lg capitalize">{box.id} PAI</h3>
+                    <h3 className="font-bold text-slate-900 text-lg capitalize">Rukun {box.id}</h3>
                     <p className="text-xs text-slate-500">{box.items.length} item terkumpul</p>
                   </div>
                 </div>
