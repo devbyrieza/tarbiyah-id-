@@ -316,7 +316,6 @@ function ArticlesTab({ materials, onDelete, onRefresh, isGuest }: { materials: M
 function VideosTab({ materials, onDelete, onRefresh, isGuest }: { materials: Material[], onDelete: (id:string)=>void, onRefresh: ()=>void, isGuest: boolean }) {
   const [showForm, setShowForm] = useState(false)
   const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
   const [url, setUrl] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [uploadType, setUploadType] = useState<'youtube' | 'file'>('youtube')
@@ -345,8 +344,8 @@ function VideosTab({ materials, onDelete, onRefresh, isGuest }: { materials: Mat
       content_url = `https://www.youtube.com/embed/${videoId}`
     }
 
-    await supabase.from('materials').insert([{ title, description, type: 'video', content_url }])
-    setTitle(''); setDescription(''); setUrl(''); setFile(null); setShowForm(false)
+    await supabase.from('materials').insert([{ title, description: '', type: 'video', content_url }])
+    setTitle(''); setUrl(''); setFile(null); setShowForm(false)
     onRefresh(); setSaving(false)
   }
 
@@ -365,11 +364,7 @@ function VideosTab({ materials, onDelete, onRefresh, isGuest }: { materials: Mat
         <form onSubmit={save} className="bg-white border border-slate-200 shadow-sm rounded-3xl p-8 mb-8 space-y-5">
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-2">Judul Video</label>
-            <input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="Judul Video" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-purple-500 focus:bg-white focus:ring-4 focus:ring-purple-500/10 transition-all" />
-          </div>
-          <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Deskripsi Singkat</label>
-            <input required value={description} onChange={e=>setDescription(e.target.value)} placeholder="Deskripsi singkat" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-purple-500 focus:bg-white focus:ring-4 focus:ring-purple-500/10 transition-all" />
+            <input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="Contoh: Tata Cara Sholat Jenazah" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-purple-500 focus:bg-white focus:ring-4 focus:ring-purple-500/10 transition-all" />
           </div>
           
           <div className="flex gap-4">
@@ -407,7 +402,9 @@ function VideosTab({ materials, onDelete, onRefresh, isGuest }: { materials: Mat
                   </button>
                 )}
               </div>
-              <p className="text-slate-500 text-sm leading-relaxed">{m.description}</p>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                {m.content_url?.includes('youtube.com') ? '🔗 Video dari YouTube' : '📁 File Video Upload'}
+              </p>
             </div>
           </div>
         ))}

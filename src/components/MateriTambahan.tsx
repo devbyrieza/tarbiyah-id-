@@ -61,7 +61,7 @@ export default function MateriTambahan() {
                     </div>
                     <h3 className="font-bold text-xl text-slate-900 mb-2 group-hover:text-teal-600 transition-colors">{m.title}</h3>
                     <p className="text-slate-500 text-sm mb-6 line-clamp-2 leading-relaxed">
-                      {m.type === 'video' ? m.description : (m.content_url ? 'Materi berupa lampiran file untuk diunduh/dibaca.' : 'Materi teks bacaan.')}
+                      {m.type === 'video' ? 'Materi tayangan video interaktif.' : (m.content_url ? 'Materi lampiran file dokumen.' : 'Materi teks bacaan.')}
                     </p>
                     <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
                       <span>{new Date(m.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})}</span>
