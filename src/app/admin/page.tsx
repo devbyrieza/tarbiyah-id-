@@ -425,8 +425,9 @@ function VideosTab({ materials, onDelete, onRefresh, isGuest }: { materials: Mat
 function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[], onDelete: (id:string)=>void, onRefresh: ()=>void, isGuest: boolean }) {
   const [showForm, setShowForm] = useState(false)
   const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
   const [questions, setQuestions] = useState<{ text: string; options: string[]; correct: number }[]>([])
+  const [file, setFile] = useState<File | null>(null)
+  const [uploadType, setUploadType] = useState<'manual' | 'file'>('manual')
   const [saving, setSaving] = useState(false)
 
   const addQuestion = () => {
@@ -452,10 +453,26 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (questions.length === 0) { alert('Tambahkan minimal 1 soal!'); return }
+    if (uploadType === 'manual' && questions.length === 0) { alert('Tambahkan minimal 1 soal!'); return }
+    if (uploadType === 'file' && !file) { alert('Pilih file kuis terlebih dahulu!'); return }
+    
     setSaving(true)
-    await supabase.from('quizzes').insert([{ title, description, questions }])
-    setTitle(''); setDescription(''); setQuestions([]); setShowForm(false)
+    let description = ''
+    let finalQuestions = questions
+
+    if (uploadType === 'file' && file) {
+      const ext = file.name.split('.').pop()
+      const path = `${Date.now()}.${ext}`
+      const { error } = await supabase.storage.from('learning-files').upload(path, file)
+      if (!error) {
+        const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
+        description = data.publicUrl
+        finalQuestions = [] // empty questions for file upload
+      }
+    }
+
+    await supabase.from('quizzes').insert([{ title, description, questions: finalQuestions }])
+    setTitle(''); setQuestions([]); setFile(null); setShowForm(false)
     onRefresh(); setSaving(false)
   }
 
@@ -475,16 +492,18 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2">Judul Kuis</label>
-              <input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="Contoh: Kuis Bab 1 - Sholat" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 transition-all" />
+              <input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="Contoh: Kuis Bab 1 - Rukun Islam" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 transition-all" />
             </div>
-            <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Deskripsi / Petunjuk</label>
-              <input value={description} onChange={e=>setDescription(e.target.value)} placeholder="Petunjuk pengerjaan kuis..." className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 transition-all" />
+            
+            <div className="flex gap-4">
+              <button type="button" onClick={() => setUploadType('manual')} className={`flex flex-1 items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border transition-all ${uploadType==='manual' ? 'bg-amber-50 border-amber-200 text-amber-600 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}><ClipboardList className="w-4 h-4" /> Buat Kuis Interaktif (Manual)</button>
+              <button type="button" onClick={() => setUploadType('file')} className={`flex flex-1 items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border transition-all ${uploadType==='file' ? 'bg-blue-50 border-blue-200 text-blue-600 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}><FolderUp className="w-4 h-4" /> Upload File Soal (PDF/Word)</button>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+          {uploadType === 'manual' ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <h3 className="font-bold text-slate-900">Soal-soal ({questions.length})</h3>
               <button type="button" onClick={addQuestion} className="px-4 py-2 bg-amber-50 text-amber-600 border border-amber-200 font-bold text-xs rounded-xl hover:bg-amber-100 transition-all">+ Tambah Soal</button>
             </div>
@@ -533,18 +552,23 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-            
-            {questions.length === 0 && (
-              <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
-                <p className="text-slate-500 text-sm font-medium">Belum ada soal. Klik "Tambah Soal" untuk mulai!</p>
-              </div>
-            )}
-          </div>
+              ))}
+              
+              {questions.length === 0 && (
+                <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
+                  <p className="text-slate-500 text-sm font-medium">Belum ada soal. Klik "Tambah Soal" untuk mulai!</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Pilih File Soal Ujian</label>
+              <input required={uploadType === 'file'} type="file" onChange={e=>setFile(e.target.files?.[0]||null)} className="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-600 file:text-sm file:font-bold hover:file:bg-blue-100 transition-all" />
+            </div>
+          )}
 
-          <button disabled={saving} type="submit" className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-white font-extrabold rounded-xl text-sm shadow-md disabled:opacity-50 transition-all mt-6">
-            {saving ? 'Menyimpan...' : `✓ Simpan Kuis (${questions.length} soal)`}
+          <button disabled={saving} type="submit" className={`w-full py-4 ${uploadType === 'file' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-amber-500 hover:bg-amber-600'} text-white font-extrabold rounded-xl text-sm shadow-md disabled:opacity-50 transition-all mt-6`}>
+            {saving ? 'Menyimpan...' : `✓ Simpan Kuis ${uploadType === 'manual' ? `(${questions.length} soal)` : '(File Upload)'}`}
           </button>
         </form>
       )}
@@ -563,9 +587,13 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
               )}
             </div>
             <h3 className="text-slate-900 font-bold text-lg leading-tight mb-2">{q.title}</h3>
-            <p className="text-slate-500 text-sm mb-4 line-clamp-2 leading-relaxed">{q.description}</p>
+            <p className="text-slate-500 text-sm mb-4 line-clamp-2 leading-relaxed">
+              {q.questions.length === 0 ? '📁 File Dokumen Kuis' : '📝 Kuis Interaktif Pilihan Ganda'}
+            </p>
             <div className="flex items-center justify-between text-xs">
-              <span className="px-3 py-1 bg-amber-50 text-amber-600 font-bold rounded-lg">{q.questions.length} soal</span>
+              <span className={`px-3 py-1 font-bold rounded-lg ${q.questions.length === 0 ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'}`}>
+                {q.questions.length === 0 ? '1 File' : `${q.questions.length} Soal`}
+              </span>
               <span className="text-slate-400 font-medium">{new Date(q.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'short'})}</span>
             </div>
           </div>

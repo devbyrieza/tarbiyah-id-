@@ -88,10 +88,28 @@ export default function KuisPage() {
         <div className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 rounded-[2.5rem] overflow-hidden">
           <div className="p-8 md:p-10 border-b border-slate-100 bg-slate-50 text-center">
             <h1 className="text-2xl font-extrabold text-slate-900 mb-2">{quiz.title}</h1>
-            <p className="text-slate-500 text-sm">{quiz.description}</p>
+            {quiz.questions.length > 0 && <p className="text-slate-500 text-sm">Kuis Interaktif Pilihan Ganda</p>}
           </div>
 
-          {!done ? (
+          {quiz.questions.length === 0 && quiz.description.startsWith('http') ? (
+            <div className="p-8 md:p-12 text-center bg-white">
+              <div className="flex justify-center mb-6 text-blue-500">
+                <BookOpen className="w-20 h-20" />
+              </div>
+              <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Dokumen Soal Ujian / Kuis</h2>
+              <p className="text-slate-500 mb-8 max-w-lg mx-auto">Pengajar telah melampirkan file dokumen yang berisi soal-soal untuk kuis ini. Silakan buka atau unduh file tersebut untuk mulai mengerjakan.</p>
+              
+              <a href={quiz.description} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-md mb-8">
+                Buka File Soal Kuis <ArrowRight className="w-4 h-4" />
+              </a>
+
+              {quiz.description.toLowerCase().includes('.pdf') && (
+                <div className="aspect-[1/1.4] w-full max-w-3xl mx-auto bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 mt-4">
+                  <iframe src={quiz.description} className="w-full h-full" />
+                </div>
+              )}
+            </div>
+          ) : !done ? (
             <div>
               <div className="px-8 py-4 border-b border-slate-100 bg-white flex justify-between items-center">
                 <span className="text-sm font-bold text-slate-500">Soal {current + 1} / {quiz.questions.length}</span>
