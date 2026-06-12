@@ -14,11 +14,11 @@ export const metadata: Metadata = {
   description:
     'Media pembelajaran interaktif berbasis ICT untuk mata kuliah ICT Pembelajaran PAI 1. Dilengkapi materi komprehensif, aktivitas interaktif, dan evaluasi dengan umpan balik otomatis. Institut Al-Masthuriyah Sukabumi.',
   keywords: ['Tarbiyah.id', 'PAI', 'sholat', 'pembelajaran interaktif', 'ICT', 'media pembelajaran', 'Islam'],
-  openGraph: {
-    title: 'Tarbiyah.id — Tata Cara Sholat',
-    description: 'Media pembelajaran interaktif berbasis ICT untuk Pendidikan Agama Islam',
-    type: 'website',
-  },
+    openGraph: {
+      title: 'Tarbiyah.id — Media Pembelajaran PAI',
+      description: 'Media pembelajaran interaktif berbasis ICT untuk Pendidikan Agama Islam',
+      type: 'website',
+    },
 }
 
 export default function RootLayout({

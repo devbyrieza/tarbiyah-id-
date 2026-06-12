@@ -25,8 +25,8 @@ export default function Petunjuk() {
   }, [])
 
   const steps = [
-    { icon: <BookOpen className="w-8 h-8 text-teal-600" />, title: 'Pahami Materi', desc: 'Baca panduan dan tonton video tata cara sholat dengan saksama.' },
-    { icon: <Gamepad2 className="w-8 h-8 text-teal-600" />, title: 'Mainkan Game', desc: 'Uji daya ingatmu dengan menyusun gerakan sholat secara interaktif.' },
+    { icon: <BookOpen className="w-8 h-8 text-teal-600" />, title: 'Pahami Materi', desc: 'Baca panduan dan tonton video materi PAI dengan saksama.' },
+    { icon: <Gamepad2 className="w-8 h-8 text-teal-600" />, title: 'Mainkan Game', desc: 'Uji daya ingatmu dengan menyusun konsep dasar Islam secara interaktif.' },
     { icon: <FileSignature className="w-8 h-8 text-teal-600" />, title: 'Ikuti Evaluasi', desc: 'Kerjakan kuis di akhir sesi untuk melihat seberapa jauh pemahamanmu.' }
   ]
 

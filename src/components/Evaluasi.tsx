@@ -215,7 +215,7 @@ export default function Evaluasi() {
                 <p className="text-sm text-teal-800 font-medium flex items-start gap-2">
                   <Lightbulb className="w-5 h-5 text-teal-600 flex-shrink-0" />
                   <span>
-                  {score === 100 ? 'Sempurna! Kamu telah menguasai materi tata cara sholat dengan sangat baik.' 
+                  {score === 100 ? 'Sempurna! Kamu telah menguasai materi Pendidikan Agama Islam dengan sangat baik.' 
                    : score >= 80 ? 'Sangat bagus! Pemahamanmu sudah kuat, tinggal sedikit lagi untuk sempurna.'
                    : 'Cukup baik. Namun disarankan untuk mengulang kembali materi yang belum dipahami.'}
                   </span>

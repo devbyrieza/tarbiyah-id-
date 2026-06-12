@@ -55,7 +55,7 @@ export default function Footer() {
               </div>
             </Link>
             <p className="text-slate-400 leading-relaxed max-w-sm mb-6">
-              Platform edukasi interaktif untuk mempelajari tata cara sholat dengan benar, mudah, dan menyenangkan.
+              Platform edukasi interaktif untuk mempelajari Pendidikan Agama Islam secara komprehensif, mudah, dan menyenangkan.
             </p>
           </div>
           
@@ -63,7 +63,7 @@ export default function Footer() {
             <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-sm">Navigasi</h4>
             <ul className="space-y-4">
               <li><Link href="/#petunjuk" className="text-slate-400 hover:text-teal-400 transition-colors text-sm font-medium">Petunjuk Penggunaan</Link></li>
-              <li><Link href="/#materi" className="text-slate-400 hover:text-teal-400 transition-colors text-sm font-medium">Materi Sholat</Link></li>
+              <li><Link href="/#materi" className="text-slate-400 hover:text-teal-400 transition-colors text-sm font-medium">Materi Pembelajaran</Link></li>
               <li><Link href="/#evaluasi" className="text-slate-400 hover:text-teal-400 transition-colors text-sm font-medium">Kuis Evaluasi</Link></li>
               <li><Link href="/forum" className="text-slate-400 hover:text-teal-400 transition-colors text-sm font-medium">Forum Diskusi</Link></li>
             </ul>

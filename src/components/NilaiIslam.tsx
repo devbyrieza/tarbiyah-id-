@@ -31,8 +31,8 @@ export default function NilaiIslam() {
           <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-xs font-bold text-teal-600 uppercase tracking-wider mb-4">
             <MoonStar className="w-3.5 h-3.5" /> Nilai Keislaman
           </span>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Makna Spiritual Sholat</h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">Sholat bukan sekadar kewajiban, melainkan kebutuhan spiritual untuk mendekatkan diri kepada Allah.</p>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Nilai-Nilai Ajaran Islam</h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">Pendidikan Agama Islam bukan sekadar hafalan, melainkan pedoman hidup untuk meraih kebahagiaan di dunia dan akhirat.</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 items-center reveal">
@@ -60,7 +60,7 @@ export default function NilaiIslam() {
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 mb-1">Benteng Diri</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">Sholat yang khusyuk akan menjadi perisai dari perbuatan buruk dalam kehidupan sehari-hari.</p>
+                <p className="text-slate-600 text-sm leading-relaxed">Pemahaman agama yang baik akan menjadi perisai dari perbuatan buruk dalam kehidupan sehari-hari.</p>
               </div>
             </div>
             

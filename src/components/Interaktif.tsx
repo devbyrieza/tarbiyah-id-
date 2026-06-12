@@ -136,7 +136,7 @@ export default function Interaktif() {
                     {box.id === 'rukun' ? <Star className="w-6 h-6" /> : <Sparkles className="w-6 h-6" />}
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900 text-lg capitalize">{box.id} Sholat</h3>
+                    <h3 className="font-bold text-slate-900 text-lg capitalize">{box.id} PAI</h3>
                     <p className="text-xs text-slate-500">{box.items.length} item terkumpul</p>
                   </div>
                 </div>

@@ -29,17 +29,17 @@ export default function Materi() {
   
   const content = [
     {
-      title: 'Pengertian Sholat',
-      desc: 'Secara bahasa, sholat berarti doa. Secara istilah, sholat adalah serangkaian ucapan dan gerakan tertentu yang diawali dengan takbiratul ihram dan diakhiri dengan salam.',
+      title: 'Aqidah Islam',
+      desc: 'Aqidah secara bahasa berarti ikatan. Secara istilah, aqidah adalah keyakinan yang kuat dan teguh di dalam hati terhadap rukun iman yang enam.',
       icon: <GraduationCap className="w-full h-full" strokeWidth={1.5} />
     },
     {
-      title: 'Syarat Sah Sholat',
-      desc: '1. Suci dari hadats kecil dan besar\n2. Suci badan, pakaian, dan tempat dari najis\n3. Menutup aurat\n4. Telah masuk waktu sholat\n5. Menghadap kiblat',
+      title: 'Akhlak Terpuji',
+      desc: '1. Jujur dalam perkataan dan perbuatan\n2. Amanah dan dapat dipercaya\n3. Hormat kepada orang tua dan guru\n4. Kasih sayang terhadap sesama\n5. Sabar dan syukur',
       icon: <Sparkles className="w-full h-full" strokeWidth={1.5} />
     },
     {
-      title: 'Rukun Sholat',
+      title: 'Fiqih Ibadah',
       desc: '1. Niat\n2. Berdiri bagi yang mampu\n3. Takbiratul Ihram\n4. Membaca Al-Fatihah\n5. Ruku\' dengan tuma\'ninah\n6. I\'tidal\n7. Sujud\n8. Duduk di antara dua sujud\n9. Duduk Tasyahud Akhir\n10. Membaca Tasyahud Akhir\n11. Membaca Sholawat\n12. Salam pertama\n13. Tertib',
       icon: <HeartHandshake className="w-full h-full" strokeWidth={1.5} />
     },
@@ -57,8 +57,8 @@ export default function Materi() {
           <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-xs font-bold text-teal-600 uppercase tracking-wider mb-4">
             <Library className="w-3.5 h-3.5" /> Materi Utama
           </span>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Materi Dasar Tata Cara Sholat</h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">Pelajari dengan saksama dasar-dasar ibadah sholat yang wajib diketahui oleh setiap muslim.</p>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Materi Dasar Pendidikan Agama Islam</h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">Pelajari dengan saksama dasar-dasar ajaran Islam yang wajib diketahui oleh setiap muslim.</p>
         </div>
 
         <div className="bg-white shadow-xl shadow-slate-200/50 rounded-[2.5rem] border border-slate-100 overflow-hidden reveal">

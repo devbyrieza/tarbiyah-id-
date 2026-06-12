@@ -15,11 +15,11 @@ export default function Hero() {
           </div>
           
           <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight mb-6 leading-tight anim-fade-in" style={{ animationDelay: '0.1s' }}>
-            Belajar Sholat Lebih <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-500">Menyenangkan.</span>
+            Belajar Agama Islam Lebih <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-500">Menyenangkan.</span>
           </h1>
           
           <p className="text-lg md:text-xl text-slate-600 mb-10 leading-relaxed anim-fade-in" style={{ animationDelay: '0.2s' }}>
-            Platform edukasi modern untuk memahami tata cara sholat dengan benar, interaktif, dan mudah dipahami oleh semua kalangan.
+            Platform edukasi modern untuk memahami materi Pendidikan Agama Islam dengan benar, interaktif, dan mudah dipahami oleh semua kalangan.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center anim-fade-in" style={{ animationDelay: '0.3s' }}>
