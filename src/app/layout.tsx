@@ -10,12 +10,12 @@ const plusJakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'Media Pembelajaran PAI Interaktif — Tata Cara Sholat',
+  title: 'Tarbiyah.id — Media Pembelajaran PAI Interaktif',
   description:
     'Media pembelajaran interaktif berbasis ICT untuk mata kuliah ICT Pembelajaran PAI 1. Dilengkapi materi komprehensif, aktivitas interaktif, dan evaluasi dengan umpan balik otomatis. Institut Al-Masthuriyah Sukabumi.',
-  keywords: ['PAI', 'sholat', 'pembelajaran interaktif', 'ICT', 'media pembelajaran', 'Islam'],
+  keywords: ['Tarbiyah.id', 'PAI', 'sholat', 'pembelajaran interaktif', 'ICT', 'media pembelajaran', 'Islam'],
   openGraph: {
-    title: 'Media Pembelajaran PAI — Tata Cara Sholat',
+    title: 'Tarbiyah.id — Tata Cara Sholat',
     description: 'Media pembelajaran interaktif berbasis ICT untuk Pendidikan Agama Islam',
     type: 'website',
   },

@@ -1,33 +1,31 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { fireConfetti, playCorrect, playWrong, playWin } from '@/lib/utils'
 
-type CardId = 1 | 2 | 3 | 4 | 5
+import { Gamepad, Star, Sparkles, PartyPopper, CheckCircle2, XCircle, GripVertical, Check, ListChecks } from 'lucide-react'
 
-const leftItems: { id: CardId; label: string }[] = [
-  { id: 1, label: '🙌 Takbiratul Ihram' },
-  { id: 2, label: "🙇 Ruku'" },
-  { id: 3, label: "🧍 I'tidal" },
-  { id: 4, label: '🙏 Sujud' },
-  { id: 5, label: '🪑 Duduk antara Sujud' },
-]
+type Item = { id: string; content: string; type: 'rukun' | 'sunnah' }
 
-const rightItems: { id: CardId; label: string }[] = [
-  { id: 3, label: "Sami'allahu liman hamidah" },
-  { id: 5, label: 'Rabbighfirli warhamni' },
-  { id: 1, label: 'Allahu Akbar' },
-  { id: 4, label: "Subhana Rabbiyal A'la" },
-  { id: 2, label: 'Subhana Rabbiyal Azhim' },
+const initialItems: Item[] = [
+  { id: '1', content: 'Membaca Al-Fatihah', type: 'rukun' },
+  { id: '2', content: 'Membaca doa iftitah', type: 'sunnah' },
+  { id: '3', content: 'Takbiratul Ihram', type: 'rukun' },
+  { id: '4', content: 'Mengangkat tangan saat takbir', type: 'sunnah' },
+  { id: '5', content: 'Ruku\' dengan tuma\'ninah', type: 'rukun' },
+  { id: '6', content: 'Membaca surat pendek', type: 'sunnah' },
 ]
 
 export default function Interaktif() {
-  const [selectedLeft, setSelectedLeft] = useState<CardId | null>(null)
-  const [selectedRight, setSelectedRight] = useState<CardId | null>(null)
-  const [matched, setMatched] = useState<Set<CardId>>(new Set())
-  const [wrongFlash, setWrongFlash] = useState<{ left?: CardId; right?: CardId } | null>(null)
-  const [feedback, setFeedback] = useState<{ msg: string; type: 'success' | 'error' | '' }>({ msg: '', type: '' })
+  const [items, setItems] = useState<Item[]>([])
+  const [boxes, setBoxes] = useState<{ id: string; items: Item[] }[]>([
+    { id: 'rukun', items: [] },
+    { id: 'sunnah', items: [] },
+  ])
+  const [feedback, setFeedback] = useState<{ msg: string; isError: boolean } | null>(null)
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    setItems([...initialItems].sort(() => Math.random() - 0.5))
     const obs = new IntersectionObserver(
       (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target) } }),
       { threshold: 0.1 }
@@ -36,116 +34,127 @@ export default function Interaktif() {
     return () => obs.disconnect()
   }, [])
 
-  useEffect(() => {
-    if (selectedLeft !== null && selectedRight !== null) {
-      if (selectedLeft === selectedRight) {
-        const newMatched = new Set(matched)
-        newMatched.add(selectedLeft)
-        setMatched(newMatched)
-        setSelectedLeft(null)
-        setSelectedRight(null)
-        const remaining = 5 - newMatched.size
-        if (remaining === 0) {
-          setFeedback({ msg: '🎉 Luar biasa! Semua pasangan benar! Kamu siap mengerjakan evaluasi!', type: 'success' })
-        } else {
-          setFeedback({ msg: `✅ Benar! ${remaining} pasangan tersisa.`, type: 'success' })
-        }
-      } else {
-        setWrongFlash({ left: selectedLeft, right: selectedRight })
-        setFeedback({ msg: '❌ Belum tepat, coba lagi!', type: 'error' })
-        setTimeout(() => {
-          setWrongFlash(null)
-          setSelectedLeft(null)
-          setSelectedRight(null)
-          setFeedback({ msg: '', type: '' })
-        }, 900)
-      }
+  const handleDragStart = (e: React.DragEvent, item: Item) => {
+    e.dataTransfer.setData('text/plain', JSON.stringify(item))
+  }
+
+  const handleDrop = (e: React.DragEvent, boxId: string) => {
+    e.preventDefault()
+    const data = e.dataTransfer.getData('text/plain')
+    if (!data) return
+    const item = JSON.parse(data) as Item
+
+    if (item.type !== boxId) {
+      playWrong()
+      setFeedback({ msg: `Ops! "${item.content}" bukan bagian dari ${boxId === 'rukun' ? 'Rukun' : 'Sunnah'}.`, isError: true })
+      setTimeout(() => setFeedback(null), 3000)
+      return
     }
-  }, [selectedLeft, selectedRight])
 
-  const reset = () => {
-    setSelectedLeft(null)
-    setSelectedRight(null)
-    setMatched(new Set())
-    setWrongFlash(null)
-    setFeedback({ msg: '', type: '' })
+    playCorrect()
+    const newItems = items.filter((i) => i.id !== item.id)
+    setItems(newItems)
+    setBoxes((prev) =>
+      prev.map((b) => (b.id === boxId ? { ...b, items: [...b.items, item] } : b))
+    )
+    setFeedback({ msg: `Benar! "${item.content}" ditambahkan ke ${boxId === 'rukun' ? 'Rukun' : 'Sunnah'}.`, isError: false })
+    setTimeout(() => setFeedback(null), 2000)
+
+    if (newItems.length === 0) {
+      setTimeout(() => {
+        playWin()
+        fireConfetti()
+      }, 500)
+    }
   }
 
-  const getLeftClass = (id: CardId) => {
-    if (matched.has(id)) return 'border-[#52b788] bg-slate-100 text-emerald-600 cursor-default'
-    if (wrongFlash?.left === id) return 'border-rose-500 bg-rose-50 text-rose-600 anim-shake'
-    if (selectedLeft === id) return 'border-[#d4a017] bg-[rgba(212,160,23,0.1)] text-[#d4a017] shadow-[0_0_12px_rgba(212,160,23,0.2)]'
-    return 'border-slate-200 text-slate-600 hover:border-[#52b788] hover:text-slate-800 hover:scale-[1.02] cursor-pointer'
-  }
-
-  const getRightClass = (id: CardId) => {
-    if (matched.has(id)) return 'border-[#52b788] bg-slate-100 text-emerald-600 cursor-default'
-    if (wrongFlash?.right === id) return 'border-rose-500 bg-rose-50 text-rose-600 anim-shake'
-    if (selectedRight === id) return 'border-[#d4a017] bg-[rgba(212,160,23,0.1)] text-[#d4a017] shadow-[0_0_12px_rgba(212,160,23,0.2)]'
-    return 'border-slate-200 text-slate-600 hover:border-[#52b788] hover:text-slate-800 hover:scale-[1.02] cursor-pointer'
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
   }
 
   return (
-    <section id="interaktif" className="py-24 bg-slate-50" ref={ref}>
+    <section className="py-24 bg-white" ref={ref}>
       <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center max-w-xl mx-auto mb-14 reveal">
-          <span className="inline-block px-4 py-1.5 rounded-full border border-slate-300 bg-slate-100 text-xs font-bold text-emerald-500 uppercase tracking-wider mb-4">
-            🎮 Interaktif
+        <div className="text-center mb-16 reveal">
+          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-xs font-bold text-teal-600 uppercase tracking-wider mb-4">
+            <Gamepad className="w-3.5 h-3.5" /> Game Edukasi
           </span>
-          <h2 className="text-3xl font-extrabold mb-3">Media Interaktif</h2>
-          <p className="text-slate-600">Uji pemahamanmu dengan mencocokkan gerakan sholat dan bacaannya!</p>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Tantangan Klasifikasi</h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">Tarik dan letakkan (Drag & Drop) kartu di bawah ini ke dalam kotak kategori yang tepat.</p>
         </div>
 
-        <div className="reveal max-w-3xl mx-auto bg-white shadow-sm border border-slate-200 rounded-2xl p-8">
-          <div className="text-center mb-6">
-            <h3 className="font-bold text-lg mb-1">🔗 Cocokkan Gerakan dengan Bacaannya</h3>
-            <p className="text-sm text-slate-600">Klik item di kolom <strong className="text-slate-800">Kiri</strong>, lalu klik pasangannya di kolom <strong className="text-slate-800">Kanan</strong></p>
-          </div>
-
-          {/* Score + Reset */}
-          <div className="flex items-center justify-between px-4 py-3 bg-[rgba(82,183,136,0.06)] border border-slate-200 rounded-xl mb-6">
-            <span className="text-sm text-slate-600">
-              Pasangan benar: <strong className="text-[#d4a017] text-base">{matched.size}</strong>/5
-            </span>
-            <button onClick={reset} className="px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-emerald-500 hover:bg-slate-100 transition-colors">
-              🔄 Reset
-            </button>
-          </div>
-
-          {/* Matching area */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-3">
-              {leftItems.map((item) => (
-                <button
-                  key={item.id}
-                  disabled={matched.has(item.id)}
-                  onClick={() => !matched.has(item.id) && setSelectedLeft(item.id)}
-                  className={`px-4 py-3 rounded-xl border-2 text-sm font-semibold text-center transition-all duration-200 ${getLeftClass(item.id)}`}
-                >
-                  {matched.has(item.id) && '✓ '}{item.label}
-                </button>
-              ))}
-            </div>
-            <div className="flex flex-col gap-3">
-              {rightItems.map((item) => (
-                <button
-                  key={item.id}
-                  disabled={matched.has(item.id)}
-                  onClick={() => !matched.has(item.id) && setSelectedRight(item.id)}
-                  className={`px-4 py-3 rounded-xl border-2 text-sm font-semibold text-center transition-all duration-200 font-amiri ${getRightClass(item.id)}`}
-                >
-                  {matched.has(item.id) && '✓ '}{item.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Feedback */}
-          {feedback.msg && (
-            <div className={`mt-5 py-3 px-4 rounded-xl text-sm font-semibold text-center transition-all ${feedback.type === 'success' ? 'bg-slate-100 border border-slate-300 text-emerald-600' : 'bg-rose-50 border border-rose-200 text-rose-600'}`}>
+        {feedback && (
+          <div className="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 anim-fade-in">
+            <div className={`px-6 py-3 rounded-full shadow-lg border text-sm font-bold backdrop-blur-md flex items-center gap-2 ${
+              feedback.isError ? 'bg-red-50 text-red-600 border-red-200' : 'bg-emerald-50 text-emerald-600 border-emerald-200'
+            }`}>
+              {feedback.isError ? <XCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
               {feedback.msg}
             </div>
-          )}
+          </div>
+        )}
+
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 reveal">
+          <div className="w-full lg:w-1/3 bg-slate-50 p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+            <h3 className="font-bold text-slate-900 mb-6 flex items-center gap-2">
+              <ListChecks className="w-5 h-5 text-teal-600" /> Item Tersedia ({items.length})
+            </h3>
+            <div className="flex flex-col gap-3 min-h-[300px]">
+              {items.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-slate-400 py-12">
+                  <PartyPopper className="w-12 h-12 mb-3 text-emerald-500" />
+                  <p className="font-medium text-slate-500 text-center">Semua item berhasil diklasifikasikan!</p>
+                </div>
+              ) : (
+                items.map((item) => (
+                  <div
+                    key={item.id}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    className="p-4 bg-white border border-slate-200 rounded-xl cursor-grab active:cursor-grabbing hover:border-teal-400 hover:shadow-md transition-all font-medium text-slate-700 select-none flex items-center gap-3 group"
+                  >
+                    <GripVertical className="w-4 h-4 text-slate-300 group-hover:text-teal-400" />
+                    {item.content}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className="w-full lg:w-2/3 grid sm:grid-cols-2 gap-6">
+            {boxes.map((box) => (
+              <div
+                key={box.id}
+                onDrop={(e) => handleDrop(e, box.id)}
+                onDragOver={handleDragOver}
+                className="bg-white border-2 border-dashed border-slate-200 hover:border-teal-400 hover:bg-teal-50/30 transition-all rounded-[2rem] p-8 flex flex-col min-h-[400px]"
+              >
+                <div className="flex items-center gap-3 mb-6 pb-6 border-b border-slate-100">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-sm ${
+                    box.id === 'rukun' ? 'bg-amber-100 text-amber-600' : 'bg-teal-100 text-teal-600'
+                  }`}>
+                    {box.id === 'rukun' ? <Star className="w-6 h-6" /> : <Sparkles className="w-6 h-6" />}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900 text-lg capitalize">{box.id} Sholat</h3>
+                    <p className="text-xs text-slate-500">{box.items.length} item terkumpul</p>
+                  </div>
+                </div>
+
+                <div className="flex-1 flex flex-col gap-3">
+                  {box.items.length === 0 ? (
+                    <div className="m-auto text-slate-400 text-sm font-medium">Drop item ke sini...</div>
+                  ) : (
+                    box.items.map((item) => (
+                      <div key={item.id} className="p-4 bg-slate-50 border border-slate-100 rounded-xl font-medium text-slate-700 flex items-center gap-3 anim-fade-in">
+                        <Check className="w-4 h-4 text-emerald-500" /> {item.content}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

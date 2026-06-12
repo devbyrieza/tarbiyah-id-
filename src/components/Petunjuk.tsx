@@ -1,73 +1,51 @@
 'use client'
 import { useEffect, useRef } from 'react'
-
-const steps = [
-  { num: '01', icon: '🎯', title: 'Baca Tujuan', desc: 'Mulailah dengan membaca tujuan pembelajaran agar kamu tahu kompetensi apa yang akan dicapai' },
-  { num: '02', icon: '📖', title: 'Pelajari Materi', desc: 'Baca dan pahami setiap materi. Klik tab untuk berpindah antar topik yang berbeda' },
-  { num: '03', icon: '🎮', title: 'Coba Interaktif', desc: 'Ikuti aktivitas mencocokkan untuk mengetes pemahaman awal kamu secara menyenangkan' },
-  { num: '04', icon: '📝', title: 'Kerjakan Evaluasi', desc: 'Jawab 5 soal evaluasi dan dapatkan umpan balik otomatis beserta skor akhirmu' },
-]
+import { BookOpen, Gamepad2, FileSignature } from 'lucide-react'
 
 export default function Petunjuk() {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target) } }),
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
       { threshold: 0.1 }
     )
-    ref.current?.querySelectorAll('.reveal').forEach((el) => obs.observe(el))
-    return () => obs.disconnect()
+
+    const elements = ref.current?.querySelectorAll('.reveal')
+    elements?.forEach((el) => observer.observe(el))
+
+    return () => observer.disconnect()
   }, [])
 
+  const steps = [
+    { icon: <BookOpen className="w-8 h-8 text-teal-600" />, title: 'Pahami Materi', desc: 'Baca panduan dan tonton video tata cara sholat dengan saksama.' },
+    { icon: <Gamepad2 className="w-8 h-8 text-teal-600" />, title: 'Mainkan Game', desc: 'Uji daya ingatmu dengan menyusun gerakan sholat secara interaktif.' },
+    { icon: <FileSignature className="w-8 h-8 text-teal-600" />, title: 'Ikuti Evaluasi', desc: 'Kerjakan kuis di akhir sesi untuk melihat seberapa jauh pemahamanmu.' }
+  ]
+
   return (
-    <section id="petunjuk" className="py-24" style={{ background: 'var(--bg-mid)' }} ref={ref}>
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center max-w-xl mx-auto mb-14 reveal">
-          <span className="inline-block px-4 py-1.5 rounded-full border border-slate-300 bg-slate-100 text-xs font-bold text-emerald-500 uppercase tracking-wider mb-4">
-            📋 Panduan
-          </span>
-          <h2 className="text-3xl font-extrabold mb-3">Petunjuk Penggunaan</h2>
-          <p className="text-slate-600">Ikuti langkah-langkah berikut untuk menggunakan media pembelajaran ini secara optimal</p>
+    <section id="petunjuk" className="py-24 bg-white" ref={ref}>
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16 reveal">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Petunjuk Penggunaan</h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">Ikuti tiga langkah sederhana ini untuk mendapatkan pengalaman belajar yang maksimal.</p>
         </div>
 
-        {/* Steps */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-          {steps.map((s, i) => (
-            <div
-              key={i}
-              className="reveal group bg-white shadow-sm border border-slate-200 rounded-2xl p-7 text-center hover:-translate-y-1 hover:border-[#52b788] hover:shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-all duration-300"
-              style={{ transitionDelay: `${i * 80}ms` }}
-            >
-              <div className="text-5xl font-black text-[rgba(82,183,136,0.12)] leading-none mb-3">{s.num}</div>
-              <div className="text-3xl mb-4">{s.icon}</div>
-              <h3 className="font-bold text-slate-800 mb-2">{s.title}</h3>
-              <p className="text-sm text-slate-600 leading-relaxed">{s.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Note */}
-        <div className="reveal grid grid-cols-1 md:grid-cols-2 gap-5">
-          {[
-            {
-              icon: '👩‍🏫',
-              title: 'Untuk Guru',
-              desc: 'Bagikan link website ini kepada siswa. Media dapat diakses melalui browser di perangkat apapun — laptop, tablet, maupun smartphone.',
-            },
-            {
-              icon: '👨‍🎓',
-              title: 'Untuk Siswa',
-              desc: 'Pelajari materi secara berurutan dari atas ke bawah. Kerjakan evaluasi setelah memahami semua materi untuk hasil terbaik.',
-            },
-          ].map((note, i) => (
-            <div key={i} className="flex items-start gap-4 p-6 bg-[rgba(82,183,136,0.06)] border border-slate-300 rounded-2xl">
-              <span className="text-3xl flex-shrink-0">{note.icon}</span>
-              <div>
-                <strong className="block text-slate-800 mb-1">{note.title}</strong>
-                <p className="text-sm text-slate-600 leading-relaxed">{note.desc}</p>
+        <div className="grid md:grid-cols-3 gap-8">
+          {steps.map((step, i) => (
+            <div key={i} className="reveal bg-slate-50 rounded-3xl p-8 border border-slate-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1" style={{ transitionDelay: `${i * 100}ms` }}>
+              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-sm border border-slate-100">
+                {step.icon}
               </div>
+              <h3 className="text-xl font-bold text-slate-900 mb-3">{step.title}</h3>
+              <p className="text-slate-600 leading-relaxed">{step.desc}</p>
             </div>
           ))}
         </div>

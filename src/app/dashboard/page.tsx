@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase, QuizResult } from '@/lib/supabase'
 import Link from 'next/link'
+import { BarChart2, RefreshCw, ArrowLeft, GraduationCap, TrendingUp, Trophy, ClipboardList, Inbox } from 'lucide-react'
 
 export default function DashboardPage() {
   const [results, setResults] = useState<QuizResult[]>([])
@@ -35,7 +36,9 @@ export default function DashboardPage() {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">📊</span>
+            <div className="bg-[#52b788]/20 p-3 rounded-2xl text-[#52b788]">
+              <BarChart2 className="w-8 h-8" />
+            </div>
             <div>
               <h1 className="text-2xl font-extrabold">Dashboard Guru</h1>
               <p className="text-sm text-[#5a8870]">Hasil Evaluasi Siswa — Tata Cara Sholat</p>
@@ -43,10 +46,10 @@ export default function DashboardPage() {
           </div>
           <div className="flex gap-3">
             <button onClick={fetchResults} className="px-4 py-2 border border-[rgba(82,183,136,0.3)] rounded-xl text-sm font-semibold text-[#52b788] hover:bg-[rgba(82,183,136,0.1)] transition-colors">
-              🔄 Refresh
+              <RefreshCw className="w-4 h-4" /> Refresh
             </button>
             <Link href="/" className="px-4 py-2 bg-gold rounded-xl text-sm font-bold text-[#0a1612] hover:shadow-[0_4px_12px_rgba(212,160,23,0.4)] transition-all">
-              ← Kembali ke Materi
+              <ArrowLeft className="w-4 h-4" /> Kembali ke Materi
             </Link>
           </div>
         </div>
@@ -54,10 +57,10 @@ export default function DashboardPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
-            { label: 'Total Siswa', value: results.length, icon: '👨‍🎓' },
-            { label: 'Rata-rata Nilai', value: avg, icon: '📈', suffix: '' },
-            { label: 'Nilai Sempurna', value: perfect, icon: '🏆' },
-            { label: 'Soal Dijawab', value: results.length * 5, icon: '📝' },
+            { label: 'Total Siswa', value: results.length, icon: <GraduationCap className="w-8 h-8 mx-auto" /> },
+            { label: 'Rata-rata Nilai', value: avg, icon: <TrendingUp className="w-8 h-8 mx-auto" />, suffix: '' },
+            { label: 'Nilai Sempurna', value: perfect, icon: <Trophy className="w-8 h-8 mx-auto" /> },
+            { label: 'Soal Dijawab', value: results.length * 5, icon: <ClipboardList className="w-8 h-8 mx-auto" /> },
           ].map((s) => (
             <div key={s.label} className="bg-white/[0.04] border border-[rgba(82,183,136,0.15)] rounded-2xl p-5 text-center">
               <div className="text-2xl mb-1">{s.icon}</div>
@@ -90,7 +93,9 @@ export default function DashboardPage() {
 
           {!loading && !error && results.length === 0 && (
             <div className="py-16 text-center">
-              <p className="text-4xl mb-3">📭</p>
+              <div className="flex justify-center mb-3 text-[#5a8870]">
+                <Inbox className="w-12 h-12" />
+              </div>
               <p className="text-[#5a8870] text-sm">Belum ada siswa yang mengerjakan evaluasi</p>
             </div>
           )}

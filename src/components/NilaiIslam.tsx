@@ -1,88 +1,89 @@
 'use client'
 import { useEffect, useRef } from 'react'
+import { MoonStar, BookOpenText, ShieldCheck, Bird, Hourglass } from 'lucide-react'
 
 export default function NilaiIslam() {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target) } }),
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
       { threshold: 0.1 }
     )
-    ref.current?.querySelectorAll('.reveal').forEach((el) => obs.observe(el))
-    return () => obs.disconnect()
+
+    const elements = ref.current?.querySelectorAll('.reveal')
+    elements?.forEach((el) => observer.observe(el))
+
+    return () => observer.disconnect()
   }, [])
 
   return (
-    <section id="nilai-islam" className="py-24" style={{ background: 'var(--bg-mid)' }} ref={ref}>
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center max-w-xl mx-auto mb-14 reveal">
-          <span className="inline-block px-4 py-1.5 rounded-full border border-slate-300 bg-slate-100 text-xs font-bold text-emerald-500 uppercase tracking-wider mb-4">
-            ☪️ Nilai Islam
+    <section className="py-24 bg-slate-50 border-t border-slate-200" ref={ref}>
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="text-center mb-16 reveal">
+          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-teal-200 bg-teal-50 text-xs font-bold text-teal-600 uppercase tracking-wider mb-4">
+            <MoonStar className="w-3.5 h-3.5" /> Nilai Keislaman
           </span>
-          <h2 className="text-3xl font-extrabold mb-3">Nilai Keislaman & Keteladanan</h2>
-          <p className="text-slate-600">Menghayati makna sholat dari Al-Quran, Hadits, dan kisah teladan</p>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Makna Spiritual Sholat</h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">Sholat bukan sekadar kewajiban, melainkan kebutuhan spiritual untuk mendekatkan diri kepada Allah.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-          {/* Hadits */}
-          <div className="reveal bg-white shadow-sm border border-slate-200 rounded-2xl p-7 hover:-translate-y-1 hover:border-[#52b788] hover:shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-all duration-300">
-            <div className="text-3xl mb-4">📜</div>
-            <h3 className="font-bold mb-4">Hadits Keutamaan Sholat</h3>
-            <p className="font-amiri text-[#d4a017] text-base text-center leading-loose mb-3 block">
-              الصَّلَاةُ عِمَادُ الدِّينِ، فَمَنْ أَقَامَهَا فَقَدْ أَقَامَ الدِّينَ، وَمَنْ تَرَكَهَا فَقَدْ هَدَمَ الدِّينَ
+        <div className="grid md:grid-cols-2 gap-8 items-center reveal">
+          <div className="order-2 md:order-1 bg-white p-8 md:p-10 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-teal-400 to-emerald-600"></div>
+            <div className="text-5xl text-teal-100 mb-6 font-serif">"</div>
+            <p className="text-xl md:text-2xl text-slate-800 font-medium leading-relaxed mb-8 italic">
+              Bacalah apa yang telah diwahyukan kepadamu, yaitu Al Kitab (Al Quran) dan dirikanlah shalat. Sesungguhnya shalat itu mencegah dari (perbuatan-perbuatan) keji dan mungkar.
             </p>
-            <p className="text-sm text-slate-600 italic leading-relaxed mb-2">
-              "Sholat adalah tiang agama. Barangsiapa mendirikannya, ia telah menegakkan agama. Barangsiapa meninggalkannya, ia telah merobohkan agama."
-            </p>
-            <p className="text-xs text-[#d4a017] font-bold">— HR. Baihaqi</p>
-          </div>
-
-          {/* Keteladanan */}
-          <div className="reveal bg-white shadow-sm border border-slate-200 rounded-2xl p-7 hover:-translate-y-1 hover:border-[#52b788] hover:shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-all duration-300" style={{ transitionDelay: '80ms' }}>
-            <div className="text-3xl mb-4">⭐</div>
-            <h3 className="font-bold mb-4">Keteladanan Rasulullah SAW</h3>
-            <p className="text-sm text-slate-600 leading-relaxed mb-4">
-              Rasulullah SAW tidak pernah meninggalkan sholat meski dalam kondisi sakit sekalipun. Beliau bersabda bahwa{' '}
-              <strong className="text-slate-800">hal pertama yang akan dihisab</strong> pada hari kiamat adalah amalan sholat seseorang.
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {['✅ Istiqomah', '✅ Tepat Waktu', '✅ Khusyu\'', '✅ Penuh Penghayatan'].map((v) => (
-                <span key={v} className="px-3 py-1 rounded-full border border-slate-300 bg-slate-100 text-xs font-semibold text-emerald-500">{v}</span>
-              ))}
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center border border-slate-200 text-slate-600">
+                <BookOpenText className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="font-bold text-slate-900">QS. Al-Ankabut</p>
+                <p className="text-sm text-slate-500">Ayat 45</p>
+              </div>
             </div>
           </div>
 
-          {/* Hikmah */}
-          <div className="reveal bg-white shadow-sm border border-slate-200 rounded-2xl p-7 hover:-translate-y-1 hover:border-[#52b788] hover:shadow-[0_8px_32px_rgba(0,0,0,0.35)] transition-all duration-300" style={{ transitionDelay: '160ms' }}>
-            <div className="text-3xl mb-4">💎</div>
-            <h3 className="font-bold mb-4">Hikmah Mendirikan Sholat</h3>
-            <div className="space-y-3">
-              {[
-                ['🧹', 'Mencegah dari perbuatan keji dan mungkar (QS. Al-Ankabut: 45)'],
-                ['🧘', 'Menenangkan jiwa dan mengurangi stres'],
-                ['🤝', 'Mempererat ukhuwah Islamiyah dalam jamaah'],
-                ['⏰', 'Melatih kedisiplinan dan manajemen waktu'],
-                ['🙌', 'Bentuk syukur dan pengakuan kebesaran Allah SWT'],
-              ].map(([icon, text]) => (
-                <div key={text} className="flex items-start gap-2 text-sm text-slate-600">
-                  <span className="flex-shrink-0">{icon}</span>
-                  <span>{text}</span>
-                </div>
-              ))}
+          <div className="order-1 md:order-2 space-y-6">
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex gap-4 hover:-translate-y-1 transition-transform">
+              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center flex-shrink-0 text-emerald-600">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 mb-1">Benteng Diri</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">Sholat yang khusyuk akan menjadi perisai dari perbuatan buruk dalam kehidupan sehari-hari.</p>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex gap-4 hover:-translate-y-1 transition-transform">
+              <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0 text-amber-600">
+                <Bird className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 mb-1">Ketenangan Jiwa</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">Menjadi momen jeda dari hiruk-pikuk duniawi untuk berkomunikasi dengan Sang Pencipta.</p>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex gap-4 hover:-translate-y-1 transition-transform">
+              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0 text-blue-600">
+                <Hourglass className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 mb-1">Disiplin Waktu</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">Melatih umat Islam untuk selalu tepat waktu dan teratur dalam menjalani keseharian.</p>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Quran Banner */}
-        <div className="reveal p-8 rounded-2xl text-center" style={{ background: 'linear-gradient(135deg, rgba(27,67,50,0.4), rgba(212,160,23,0.1))', border: '1px solid rgba(212,160,23,0.25)' }}>
-          <p className="font-amiri text-[#f0c040] text-2xl leading-loose mb-3">
-            وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ وَارْكَعُوا مَعَ الرَّاكِعِينَ
-          </p>
-          <p className="text-sm text-slate-600 italic mb-2">
-            "Dan dirikanlah sholat, tunaikanlah zakat, dan ruku'lah beserta orang-orang yang ruku'."
-          </p>
-          <p className="text-sm text-[#d4a017] font-bold">QS. Al-Baqarah: 43</p>
         </div>
       </div>
     </section>
