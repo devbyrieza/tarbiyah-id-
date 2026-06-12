@@ -11,7 +11,7 @@ export default function Navbar() {
       {/* Top Announcement Bar untuk Dosen */}
       <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 text-xs md:text-sm font-bold text-center py-2.5 px-4 flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 shadow-sm relative z-50">
         <span className="flex items-center gap-2">
-          <span>🎓</span> Khusus Dosen Penilai: Coba akses Simulasi Panel Admin PAI
+          <span>🎓</span> Khusus Dosen Penguji: Silakan akses Simulasi Panel Admin PAI
         </span>
         <Link href="/admin/login" className="bg-slate-900 text-amber-400 px-4 py-1 rounded-full text-xs hover:bg-slate-800 transition-all shadow-md flex items-center gap-1">
           Masuk 1-Klik (Guest) &rarr;
