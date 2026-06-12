@@ -6,6 +6,7 @@ import { BookOpenCheck, Menu, X } from 'lucide-react'
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
 
+  return (
     <div className="fixed w-full z-50">
       {/* Top Announcement Bar untuk Dosen */}
       <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 text-xs md:text-sm font-bold text-center py-2.5 px-4 flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 shadow-sm relative z-50">
