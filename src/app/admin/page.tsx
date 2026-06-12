@@ -552,7 +552,8 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
                     </div>
                   </div>
                 </div>
-              ))}
+              </div>
+            ))}
               
               {questions.length === 0 && (
                 <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
