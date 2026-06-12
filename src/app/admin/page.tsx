@@ -145,15 +145,61 @@ function OverviewTab({ stats, loading }: { stats: any, loading: boolean }) {
           </div>
         ))}
       </div>
-      <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-8">
-        <h3 className="font-bold text-slate-900 mb-6 flex items-center gap-2">
-          <Pin className="w-5 h-5 text-rose-500" /> Panduan Singkat
-        </h3>
-        <div className="space-y-4 text-sm text-slate-600 font-medium">
-          <p className="flex items-center gap-3"><span className="w-2 h-2 rounded-full bg-blue-500"></span> Gunakan menu <strong className="text-slate-900">Artikel</strong> untuk menulis & mempublikasikan materi teks lengkap.</p>
-          <p className="flex items-center gap-3"><span className="w-2 h-2 rounded-full bg-purple-500"></span> Gunakan menu <strong className="text-slate-900">Video</strong> untuk menambahkan video YouTube atau upload file video.</p>
-          <p className="flex items-center gap-3"><span className="w-2 h-2 rounded-full bg-amber-500"></span> Gunakan menu <strong className="text-slate-900">Kuis</strong> untuk membuat kuis interaktif dengan Quiz Builder.</p>
-          <p className="flex items-center gap-3"><span className="w-2 h-2 rounded-full bg-teal-500"></span> Gunakan menu <strong className="text-slate-900">Forum</strong> untuk melihat & membalas diskusi siswa sebagai Pengajar.</p>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        {/* Aktivitas Terbaru (Dummy Data) */}
+        <div className="xl:col-span-2 bg-white border border-slate-200 shadow-sm rounded-3xl p-8">
+          <div className="flex items-center justify-between mb-6 pb-6 border-b border-slate-100">
+            <h3 className="font-bold text-slate-900 flex items-center gap-2">
+              <BarChart2 className="w-5 h-5 text-indigo-500" /> Aktivitas Sistem Terbaru
+            </h3>
+            <span className="px-3 py-1 bg-emerald-50 text-emerald-600 text-xs font-bold rounded-lg border border-emerald-100 flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Sistem Aktif
+            </span>
+          </div>
+          
+          <div className="space-y-6">
+            {[
+              { icon: <MessageCircle className="w-4 h-4 text-teal-600" />, bg: 'bg-teal-50', text: 'Budi Santoso membalas diskusi di forum "Hukum Tajwid"', time: '10 menit yang lalu' },
+              { icon: <ClipboardList className="w-4 h-4 text-amber-600" />, bg: 'bg-amber-50', text: 'Siti Aminah menyelesaikan "Kuis Bab 1: Rukun Islam" (Skor: 100)', time: '1 jam yang lalu' },
+              { icon: <FileText className="w-4 h-4 text-blue-600" />, bg: 'bg-blue-50', text: 'Materi baru "Sejarah Kebudayaan Islam" berhasil diterbitkan', time: '3 jam yang lalu' },
+              { icon: <Video className="w-4 h-4 text-purple-600" />, bg: 'bg-purple-50', text: 'Video pembelajaran "Tata Cara Tayammum" ditambahkan', time: 'Kemarin, 14:30' },
+            ].map((act, i) => (
+              <div key={i} className="flex items-start gap-4">
+                <div className={`w-10 h-10 rounded-full ${act.bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                  {act.icon}
+                </div>
+                <div>
+                  <p className="text-slate-700 text-sm font-medium">{act.text}</p>
+                  <p className="text-slate-400 text-xs mt-1">{act.time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Panduan Singkat */}
+        <div className="xl:col-span-1 bg-white border border-slate-200 shadow-sm rounded-3xl p-8">
+          <h3 className="font-bold text-slate-900 mb-6 flex items-center gap-2">
+            <Pin className="w-5 h-5 text-rose-500" /> Panduan Singkat
+          </h3>
+          <div className="space-y-5 text-sm text-slate-600 font-medium">
+            <div className="flex gap-3 items-start">
+              <span className="w-6 h-6 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5"><FileText className="w-3.5 h-3.5" /></span>
+              <p>Gunakan menu <strong className="text-slate-900">Artikel</strong> untuk merilis materi teks lengkap.</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="w-6 h-6 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5"><Video className="w-3.5 h-3.5" /></span>
+              <p>Gunakan menu <strong className="text-slate-900">Video</strong> untuk embed link YouTube PAI.</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="w-6 h-6 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0 mt-0.5"><ClipboardList className="w-3.5 h-3.5" /></span>
+              <p>Gunakan menu <strong className="text-slate-900">Kuis</strong> untuk merancang soal ujian.</p>
+            </div>
+            <div className="flex gap-3 items-start">
+              <span className="w-6 h-6 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center flex-shrink-0 mt-0.5"><MessageCircle className="w-3.5 h-3.5" /></span>
+              <p>Gunakan menu <strong className="text-slate-900">Forum</strong> untuk membimbing siswa.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
