@@ -6,9 +6,20 @@ import { BookOpenCheck, Menu, X } from 'lucide-react'
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
 
-  return (
-    <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <div className="fixed w-full z-50">
+      {/* Top Announcement Bar untuk Dosen */}
+      <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 text-xs md:text-sm font-bold text-center py-2.5 px-4 flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 shadow-sm relative z-50">
+        <span className="flex items-center gap-2">
+          <span>🎓</span> Khusus Dosen Penilai: Coba akses Simulasi Panel Admin PAI
+        </span>
+        <Link href="/admin/login" className="bg-slate-900 text-amber-400 px-4 py-1 rounded-full text-xs hover:bg-slate-800 transition-all shadow-md flex items-center gap-1">
+          Masuk 1-Klik (Guest) &rarr;
+        </Link>
+      </div>
+      
+      {/* Navbar Utama */}
+      <nav className="w-full bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm relative z-40">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-teal-500/20">
             <BookOpenCheck className="w-6 h-6" />
@@ -44,7 +55,8 @@ export default function Navbar() {
           <Link href="/forum" onClick={() => setIsOpen(false)} className="block text-sm font-semibold text-slate-600">Forum Diskusi</Link>
           <Link href="/admin/login" onClick={() => setIsOpen(false)} className="block text-sm font-semibold text-teal-600">Masuk Pengajar</Link>
         </div>
-      )}
-    </nav>
+        )}
+      </nav>
+    </div>
   )
 }
