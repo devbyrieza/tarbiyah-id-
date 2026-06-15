@@ -264,7 +264,7 @@ function PPTTab({ materials, onDelete, onRefresh, isGuest }: { materials: Materi
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-2">Pilih File (PDF/PPT/PPTX)</label>
             <input required type="file" accept=".pdf,.ppt,.pptx" onChange={e=>setFile(e.target.files?.[0]||null)} className="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-600 file:text-sm file:font-bold hover:file:bg-blue-100 transition-all" />
-            <p className="text-xs text-slate-500 mt-2">*Disarankan format PDF agar bisa langsung dibaca (di-embed) di dalam aplikasi.</p>
+            <p className="text-xs text-slate-500 mt-2">*Mendukung format PPT, PPTX, atau PDF untuk penayangan langsung di dalam aplikasi.</p>
           </div>
           <button disabled={saving} type="submit" className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm shadow-md disabled:opacity-50 transition-all w-full sm:w-auto mt-4">
             {saving ? 'Mengunggah...' : '✓ Publikasikan PPT'}
@@ -357,7 +357,7 @@ function MakalahTab({ materials, onDelete, onRefresh, isGuest }: { materials: Ma
           <div>
             <label className="block text-sm font-bold text-slate-700 mb-2">Pilih File (PDF/Word)</label>
             <input required type="file" accept=".pdf,.doc,.docx" onChange={e=>setFile(e.target.files?.[0]||null)} className="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:bg-purple-50 file:text-purple-600 file:text-sm file:font-bold hover:file:bg-purple-100 transition-all" />
-            <p className="text-xs text-slate-500 mt-2">*Disarankan format PDF agar bisa dibaca langsung di browser.</p>
+            <p className="text-xs text-slate-500 mt-2">*Mendukung format PDF, DOC, atau DOCX untuk penayangan langsung di dalam aplikasi.</p>
           </div>
           <button disabled={saving} type="submit" className="px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl text-sm shadow-md disabled:opacity-50 transition-all w-full sm:w-auto mt-4">
             {saving ? 'Mengunggah...' : '✓ Publikasikan Makalah'}
