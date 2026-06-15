@@ -67,6 +67,17 @@ export default function MateriPage() {
 
   const badgeStyles = getTypeBadgeStyles()
 
+  const getFileExtension = (url: string) => {
+    try {
+      const pathname = new URL(url).pathname
+      return pathname.split('.').pop()?.toLowerCase() || ''
+    } catch {
+      return url.split('?')[0].split('#')[0].split('.').pop()?.toLowerCase() || ''
+    }
+  }
+
+  const fileExt = material.content_url ? getFileExtension(material.content_url) : ''
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <div className="max-w-4xl mx-auto px-6 py-12">
@@ -116,11 +127,11 @@ export default function MateriPage() {
                   </a>
                 </div>
                 
-                {material.content_url.toLowerCase().includes('.pdf') ? (
+                {fileExt === 'pdf' ? (
                   <div className="mt-8 aspect-[1/1.4] w-full bg-slate-100 rounded-2xl overflow-hidden border border-slate-200">
                     <iframe src={material.content_url} className="w-full h-full" />
                   </div>
-                ) : (material.content_url.toLowerCase().endsWith('.ppt') || material.content_url.toLowerCase().endsWith('.pptx') || material.content_url.toLowerCase().endsWith('.doc') || material.content_url.toLowerCase().endsWith('.docx')) ? (
+                ) : ['ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx'].includes(fileExt) ? (
                   <div className="mt-8 aspect-[4/3] w-full bg-slate-100 rounded-2xl overflow-hidden border border-slate-200">
                     <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(material.content_url)}&embedded=true`} className="w-full h-full" />
                   </div>

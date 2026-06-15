@@ -16,6 +16,17 @@ export default function KuisPage() {
   const [score, setScore] = useState(0)
   const [done, setDone] = useState(false)
 
+  const getFileExtension = (url: string) => {
+    try {
+      const pathname = new URL(url).pathname
+      return pathname.split('.').pop()?.toLowerCase() || ''
+    } catch {
+      return url.split('?')[0].split('#')[0].split('.').pop()?.toLowerCase() || ''
+    }
+  }
+
+  const fileExt = quiz?.description ? getFileExtension(quiz.description) : ''
+
   useEffect(() => {
     const fetch = async () => {
       const { data } = await supabase.from('quizzes').select('*').eq('id', id).single()
@@ -103,11 +114,15 @@ export default function KuisPage() {
                 Buka File Soal Kuis <ArrowRight className="w-4 h-4" />
               </a>
 
-              {quiz.description.toLowerCase().includes('.pdf') && (
+              {fileExt === 'pdf' ? (
                 <div className="aspect-[1/1.4] w-full max-w-3xl mx-auto bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 mt-4">
                   <iframe src={quiz.description} className="w-full h-full" />
                 </div>
-              )}
+              ) : ['ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx'].includes(fileExt) ? (
+                <div className="aspect-[4/3] w-full max-w-3xl mx-auto bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 mt-4">
+                  <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(quiz.description)}&embedded=true`} className="w-full h-full" />
+                </div>
+              ) : null}
             </div>
           ) : !done ? (
             <div>
