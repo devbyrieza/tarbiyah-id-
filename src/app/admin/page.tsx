@@ -225,12 +225,21 @@ function PPTTab({ materials, onDelete, onRefresh, isGuest }: { materials: Materi
     const ext = file.name.split('.').pop()
     const path = `${Date.now()}.${ext}`
     const { error } = await supabase.storage.from('learning-files').upload(path, file)
-    if (!error) {
-      const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
-      content_url = data.publicUrl
+    if (error) {
+      alert('Gagal mengunggah file PPT: ' + error.message)
+      setSaving(false)
+      return
     }
+    const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
+    content_url = data.publicUrl
 
-    await supabase.from('materials').insert([{ title, description: '', type: 'ppt', content_url }])
+    const { error: dbError } = await supabase.from('materials').insert([{ title, description: '', type: 'ppt', content_url }])
+    if (dbError) {
+      alert('Gagal mempublikasikan PPT ke database: ' + dbError.message)
+      setSaving(false)
+      return
+    }
+    
     setTitle(''); setFile(null); setShowForm(false)
     onRefresh(); setSaving(false)
   }
@@ -309,12 +318,21 @@ function MakalahTab({ materials, onDelete, onRefresh, isGuest }: { materials: Ma
     const ext = file.name.split('.').pop()
     const path = `${Date.now()}.${ext}`
     const { error } = await supabase.storage.from('learning-files').upload(path, file)
-    if (!error) {
-      const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
-      content_url = data.publicUrl
+    if (error) {
+      alert('Gagal mengunggah file Makalah: ' + error.message)
+      setSaving(false)
+      return
     }
+    const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
+    content_url = data.publicUrl
 
-    await supabase.from('materials').insert([{ title, description: '', type: 'makalah', content_url }])
+    const { error: dbError } = await supabase.from('materials').insert([{ title, description: '', type: 'makalah', content_url }])
+    if (dbError) {
+      alert('Gagal mempublikasikan Makalah ke database: ' + dbError.message)
+      setSaving(false)
+      return
+    }
+    
     setTitle(''); setFile(null); setShowForm(false)
     onRefresh(); setSaving(false)
   }
@@ -395,10 +413,13 @@ function VideosTab({ materials, onDelete, onRefresh, isGuest }: { materials: Mat
       const ext = file.name.split('.').pop()
       const path = `${Date.now()}.${ext}`
       const { error } = await supabase.storage.from('learning-files').upload(path, file)
-      if (!error) {
-        const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
-        content_url = data.publicUrl
+      if (error) {
+        alert('Gagal mengunggah file video: ' + error.message)
+        setSaving(false)
+        return
       }
+      const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
+      content_url = data.publicUrl
     }
 
     if (uploadType === 'youtube' && url.includes('watch?v=')) {
@@ -409,7 +430,13 @@ function VideosTab({ materials, onDelete, onRefresh, isGuest }: { materials: Mat
       content_url = `https://www.youtube.com/embed/${videoId}`
     }
 
-    await supabase.from('materials').insert([{ title, description: '', type: 'video', content_url }])
+    const { error: dbError } = await supabase.from('materials').insert([{ title, description: '', type: 'video', content_url }])
+    if (dbError) {
+      alert('Gagal mempublikasikan Video ke database: ' + dbError.message)
+      setSaving(false)
+      return
+    }
+    
     setTitle(''); setUrl(''); setFile(null); setShowForm(false)
     onRefresh(); setSaving(false)
   }
@@ -529,14 +556,23 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
       const ext = file.name.split('.').pop()
       const path = `${Date.now()}.${ext}`
       const { error } = await supabase.storage.from('learning-files').upload(path, file)
-      if (!error) {
-        const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
-        description = data.publicUrl
-        finalQuestions = [] // empty questions for file upload
+      if (error) {
+        alert('Gagal mengunggah file kuis: ' + error.message)
+        setSaving(false)
+        return
       }
+      const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
+      description = data.publicUrl
+      finalQuestions = [] // empty questions for file upload
     }
 
-    await supabase.from('quizzes').insert([{ title, description, questions: finalQuestions }])
+    const { error: dbError } = await supabase.from('quizzes').insert([{ title, description, questions: finalQuestions }])
+    if (dbError) {
+      alert('Gagal mempublikasikan Kuis ke database: ' + dbError.message)
+      setSaving(false)
+      return
+    }
+    
     setTitle(''); setQuestions([]); setFile(null); setShowForm(false)
     onRefresh(); setSaving(false)
   }
