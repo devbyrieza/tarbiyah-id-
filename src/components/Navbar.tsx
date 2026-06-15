@@ -44,7 +44,7 @@ export default function Navbar() {
           <Link href="/#materi" className="text-sm font-semibold text-slate-600 hover:text-teal-600 transition-colors">Materi</Link>
           <Link href="/#evaluasi" className="text-sm font-semibold text-slate-600 hover:text-teal-600 transition-colors">Evaluasi</Link>
           <Link href="/forum" className="text-sm font-semibold text-slate-600 hover:text-teal-600 transition-colors">Forum Diskusi</Link>
-          <Link href="/admin/login" className="px-5 py-2.5 rounded-full bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200 transition-all border border-slate-200">
+          <Link href="/admin" className="px-5 py-2.5 rounded-full bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200 transition-all border border-slate-200">
             Masuk Pengajar
           </Link>
         </div>
@@ -62,7 +62,7 @@ export default function Navbar() {
           <Link href="/#materi" onClick={() => setIsOpen(false)} className="block text-sm font-semibold text-slate-600">Materi</Link>
           <Link href="/#evaluasi" onClick={() => setIsOpen(false)} className="block text-sm font-semibold text-slate-600">Evaluasi</Link>
           <Link href="/forum" onClick={() => setIsOpen(false)} className="block text-sm font-semibold text-slate-600">Forum Diskusi</Link>
-          <Link href="/admin/login" onClick={() => setIsOpen(false)} className="block text-sm font-semibold text-teal-600">Masuk Pengajar</Link>
+          <Link href="/admin" onClick={() => setIsOpen(false)} className="block text-sm font-semibold text-teal-600">Masuk Pengajar</Link>
         </div>
         )}
       </nav>

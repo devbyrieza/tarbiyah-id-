@@ -22,8 +22,8 @@ export default function MateriTambahan() {
     fetchAll()
   }, [])
 
-  const ppts = materials.filter(m => m.type === 'ppt')
-  const makalahs = materials.filter(m => m.type === 'makalah')
+  const ppts = materials.filter(m => m.type === 'article')
+  const makalahs = materials.filter(m => m.type === 'document')
   const videos = materials.filter(m => m.type === 'video')
 
   return (

@@ -44,13 +44,13 @@ export default function MateriPage() {
           icon: <Video className="w-3.5 h-3.5" />,
           label: 'Video Pembelajaran'
         }
-      case 'ppt':
+      case 'article':
         return {
           container: 'bg-blue-50 text-blue-600 border-blue-200',
           icon: <Presentation className="w-3.5 h-3.5" />,
           label: 'Bahan Tayang (PPT)'
         }
-      case 'makalah':
+      case 'document':
         return {
           container: 'bg-purple-50 text-purple-600 border-purple-200',
           icon: <BookOpen className="w-3.5 h-3.5" />,
@@ -108,16 +108,16 @@ export default function MateriPage() {
             <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">{material.title}</h1>
             {material.description && <p className="text-slate-500 text-lg mb-8 leading-relaxed border-b border-slate-100 pb-8">{material.description}</p>}
             
-            {(material.type === 'ppt' || material.type === 'makalah' || material.type === 'article' || material.type === 'document') && material.content_url && (
+            {(material.type === 'article' || material.type === 'document') && material.content_url && (
               <div className="mb-8">
                 <div className="p-6 bg-blue-50 border border-blue-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm flex-shrink-0">
-                      {material.type === 'ppt' ? <Presentation className="w-6 h-6 text-blue-600" /> : material.type === 'makalah' ? <BookOpen className="w-6 h-6 text-purple-600" /> : <FileText className="w-6 h-6 text-slate-600" />}
+                      {material.type === 'article' ? <Presentation className="w-6 h-6 text-blue-600" /> : <BookOpen className="w-6 h-6 text-purple-600" />}
                     </div>
                     <div>
                       <h3 className="font-bold text-slate-900">
-                        {material.type === 'ppt' ? 'Lampiran Bahan Tayang (PPT)' : material.type === 'makalah' ? 'Lampiran Modul & Makalah' : 'Lampiran Dokumen Utama'}
+                        {material.type === 'article' ? 'Lampiran Bahan Tayang (PPT)' : 'Lampiran Modul & Makalah'}
                       </h3>
                       <p className="text-sm text-slate-600">Klik tombol di samping untuk mengunduh atau membaca dokumen.</p>
                     </div>
