@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { BookOpen, Gamepad2, FileSignature } from 'lucide-react'
+import { BookOpen, MessageSquare, FileSignature } from 'lucide-react'
 
 export default function Petunjuk() {
   const ref = useRef<HTMLDivElement>(null)
@@ -25,9 +25,9 @@ export default function Petunjuk() {
   }, [])
 
   const steps = [
-    { icon: <BookOpen className="w-8 h-8 text-teal-600" />, title: 'Pahami Materi', desc: 'Baca panduan dan tonton video materi PAI dengan saksama.' },
-    { icon: <Gamepad2 className="w-8 h-8 text-teal-600" />, title: 'Mainkan Game', desc: 'Uji daya ingatmu dengan menyusun konsep dasar Islam secara interaktif.' },
-    { icon: <FileSignature className="w-8 h-8 text-teal-600" />, title: 'Ikuti Evaluasi', desc: 'Kerjakan kuis di akhir sesi untuk melihat seberapa jauh pemahamanmu.' }
+    { icon: <BookOpen className="w-8 h-8 text-teal-600" />, title: 'Pahami Materi', desc: 'Pelajari bahan tayang PPT, modul makalah, serta tonton video materi yang tersedia.' },
+    { icon: <MessageSquare className="w-8 h-8 text-teal-600" />, title: 'Tanya Jawab', desc: 'Gunakan forum diskusi untuk berkonsultasi mengenai materi yang belum dipahami.' },
+    { icon: <FileSignature className="w-8 h-8 text-teal-600" />, title: 'Ikuti Evaluasi', desc: 'Kerjakan kuis interaktif atau unduh soal evaluasi untuk menguji pemahamanmu.' }
   ]
 
   return (

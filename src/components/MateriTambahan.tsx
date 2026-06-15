@@ -27,7 +27,7 @@ export default function MateriTambahan() {
   const videos = materials.filter(m => m.type === 'video')
 
   return (
-    <section className="py-24 bg-slate-50 relative overflow-hidden">
+    <section id="materi" className="py-24 bg-slate-50 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 relative z-10 space-y-24">
         
         {loading ? (
@@ -137,7 +137,7 @@ export default function MateriTambahan() {
             </div>
 
             {/* Section: Evaluasi Kuis */}
-            <div>
+            <div id="evaluasi">
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center">
                   <ClipboardList className="w-6 h-6" />

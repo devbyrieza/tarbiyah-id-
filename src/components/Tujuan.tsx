@@ -44,15 +44,15 @@ export default function Tujuan() {
           <ul className="space-y-6">
             <li className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-white text-teal-600 flex items-center justify-center font-bold flex-shrink-0 mt-1">1</div>
-              <p className="text-white text-lg font-medium leading-relaxed">Siswa dapat <strong className="text-amber-300">menjelaskan pengertian</strong> ajaran Islam dan dasar hukumnya dengan benar.</p>
+              <p className="text-white text-lg font-medium leading-relaxed">Meningkatkan <strong className="text-amber-300">pemahaman kognitif</strong> siswa terhadap materi pendidikan Islam yang diajarkan secara terstruktur.</p>
             </li>
             <li className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-white text-teal-600 flex items-center justify-center font-bold flex-shrink-0 mt-1">2</div>
-              <p className="text-white text-lg font-medium leading-relaxed">Siswa mampu <strong className="text-amber-300">mengidentifikasi syarat dan rukun</strong> ajaran Islam dalam kehidupan sehari-hari.</p>
+              <p className="text-white text-lg font-medium leading-relaxed">Mendorong <strong className="text-amber-300">pembelajaran interaktif</strong> lewat media audio-visual (video) dan presentasi materi (PPT/Makalah).</p>
             </li>
             <li className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-white text-teal-600 flex items-center justify-center font-bold flex-shrink-0 mt-1">3</div>
-              <p className="text-white text-lg font-medium leading-relaxed">Siswa dapat <strong className="text-amber-300">mempraktikkan gerakan dan bacaan</strong> ibadah dengan baik, benar, dan penuh kesadaran.</p>
+              <p className="text-white text-lg font-medium leading-relaxed">Memfasilitasi <strong className="text-amber-300">diskusi dua arah</strong> antara pengajar dan siswa guna memecahkan kesulitan belajar bersama.</p>
             </li>
           </ul>
         </div>
