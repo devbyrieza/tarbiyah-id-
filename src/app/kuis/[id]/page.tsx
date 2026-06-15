@@ -103,26 +103,49 @@ export default function KuisPage() {
           </div>
 
           {quiz.questions.length === 0 && quiz.description?.startsWith('http') ? (
-            <div className="p-8 md:p-12 text-center bg-white">
-              <div className="flex justify-center mb-6 text-blue-500">
-                <BookOpen className="w-20 h-20" />
+            <div className="p-6 md:p-8 bg-white">
+              {/* Clean header for the quiz document viewer */}
+              <div className="flex items-center justify-between px-6 py-4 bg-slate-100 border border-slate-200 border-b-0 rounded-t-3xl">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                    <BookOpen className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <span className="font-bold text-slate-800 text-sm truncate max-w-[200px] sm:max-w-[350px]">
+                    {quiz.title}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={quiz.description}
+                    download
+                    className="px-3.5 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-lg text-xs transition-all shadow-sm flex items-center gap-1.5"
+                  >
+                    Unduh File
+                  </a>
+                  <a
+                    href={quiz.description}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg text-xs transition-all shadow-sm flex items-center gap-1.5"
+                  >
+                    Buka Penuh
+                  </a>
+                </div>
               </div>
-              <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Dokumen Soal Ujian / Kuis</h2>
-              <p className="text-slate-500 mb-8 max-w-lg mx-auto">Pengajar telah melampirkan file dokumen yang berisi soal-soal untuk kuis ini. Silakan buka atau unduh file tersebut untuk mulai mengerjakan.</p>
-              
-              <a href={quiz.description} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-md mb-8">
-                Buka File Soal Kuis <ArrowRight className="w-4 h-4" />
-              </a>
 
+              {/* Embedded Quiz Document Viewer */}
               {fileExt === 'pdf' ? (
-                <div className="aspect-[1/1.4] w-full max-w-3xl mx-auto bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 mt-4">
-                  <iframe src={quiz.description} className="w-full h-full" />
+                <div className="w-full aspect-[1/1.4] bg-slate-100 border border-slate-200 rounded-b-3xl overflow-hidden shadow-inner">
+                  <iframe src={quiz.description} className="w-full h-full border-none" />
                 </div>
-              ) : ['ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx'].includes(fileExt) ? (
-                <div className="aspect-[4/3] w-full max-w-3xl mx-auto bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 mt-4">
-                  <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(quiz.description)}&embedded=true`} className="w-full h-full" />
+              ) : (
+                <div className="w-full aspect-[16/10] min-h-[550px] bg-slate-100 border border-slate-200 rounded-b-3xl overflow-hidden shadow-inner">
+                  <iframe 
+                    src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(quiz.description)}`} 
+                    className="w-full h-full border-none" 
+                  />
                 </div>
-              ) : null}
+              )}
             </div>
           ) : !done ? (
             <div>

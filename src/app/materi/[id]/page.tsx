@@ -110,32 +110,48 @@ export default function MateriPage() {
             
             {(material.type === 'article' || material.type === 'document') && material.content_url && (
               <div className="mb-8">
-                <div className="p-6 bg-blue-50 border border-blue-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm flex-shrink-0">
-                      {material.type === 'article' ? <Presentation className="w-6 h-6 text-blue-600" /> : <BookOpen className="w-6 h-6 text-purple-600" />}
+                {/* Clean header for the document viewer */}
+                <div className="flex items-center justify-between px-6 py-4 bg-slate-100 border border-slate-200 border-b-0 rounded-t-3xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                      {material.type === 'article' ? <Presentation className="w-4 h-4 text-blue-600" /> : <BookOpen className="w-4 h-4 text-purple-600" />}
                     </div>
-                    <div>
-                      <h3 className="font-bold text-slate-900">
-                        {material.type === 'article' ? 'Lampiran Bahan Tayang (PPT)' : 'Lampiran Modul & Makalah'}
-                      </h3>
-                      <p className="text-sm text-slate-600">Klik tombol di samping untuk mengunduh atau membaca dokumen.</p>
-                    </div>
+                    <span className="font-bold text-slate-800 text-sm truncate max-w-[200px] sm:max-w-[350px]">
+                      {material.title}
+                    </span>
                   </div>
-                  <a href={material.content_url} target="_blank" rel="noreferrer" className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all shadow-md flex items-center gap-2 w-full md:w-auto justify-center">
-                    Buka File Materi <ArrowRight className="w-4 h-4" />
-                  </a>
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={material.content_url}
+                      download
+                      className="px-3.5 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-lg text-xs transition-all shadow-sm flex items-center gap-1.5"
+                    >
+                      Unduh File
+                    </a>
+                    <a
+                      href={material.content_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg text-xs transition-all shadow-sm flex items-center gap-1.5"
+                    >
+                      Buka Penuh
+                    </a>
+                  </div>
                 </div>
-                
+
+                {/* Embedded Document Viewer */}
                 {fileExt === 'pdf' ? (
-                  <div className="mt-8 aspect-[1/1.4] w-full bg-slate-100 rounded-2xl overflow-hidden border border-slate-200">
-                    <iframe src={material.content_url} className="w-full h-full" />
+                  <div className="w-full aspect-[1/1.4] bg-slate-100 border border-slate-200 rounded-b-3xl overflow-hidden shadow-inner">
+                    <iframe src={material.content_url} className="w-full h-full border-none" />
                   </div>
-                ) : ['ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx'].includes(fileExt) ? (
-                  <div className="mt-8 aspect-[4/3] w-full bg-slate-100 rounded-2xl overflow-hidden border border-slate-200">
-                    <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(material.content_url)}&embedded=true`} className="w-full h-full" />
+                ) : (
+                  <div className="w-full aspect-[16/10] min-h-[550px] bg-slate-100 border border-slate-200 rounded-b-3xl overflow-hidden shadow-inner">
+                    <iframe 
+                      src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(material.content_url)}`} 
+                      className="w-full h-full border-none" 
+                    />
                   </div>
-                ) : null}
+                )}
               </div>
             )}
 
