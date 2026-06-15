@@ -54,7 +54,7 @@ export default function MateriTambahan() {
                     <Link key={m.id} href={`/materi/${m.id}`} className="group block bg-white rounded-3xl border border-slate-200 overflow-hidden hover:border-blue-400 hover:shadow-xl hover:shadow-blue-600/10 transition-all hover:-translate-y-1">
                       <div className="p-8">
                         <h3 className="font-bold text-xl text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{m.title}</h3>
-                        <p className="text-slate-500 text-sm mb-6 line-clamp-2 leading-relaxed">Berisi lampiran materi presentasi (PPT/PDF).</p>
+                        <p className="text-slate-500 text-sm mb-6 line-clamp-2 leading-relaxed">{m.description || 'Berisi lampiran materi presentasi (PPT/PDF).'}</p>
                         <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
                           <span>{new Date(m.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})}</span>
                           <span className="text-blue-600 group-hover:translate-x-1 transition-transform">Lihat Tayangan →</span>
@@ -87,7 +87,7 @@ export default function MateriTambahan() {
                     <Link key={m.id} href={`/materi/${m.id}`} className="group block bg-white rounded-3xl border border-slate-200 overflow-hidden hover:border-purple-400 hover:shadow-xl hover:shadow-purple-600/10 transition-all hover:-translate-y-1">
                       <div className="p-8">
                         <h3 className="font-bold text-xl text-slate-900 mb-2 group-hover:text-purple-600 transition-colors">{m.title}</h3>
-                        <p className="text-slate-500 text-sm mb-6 line-clamp-2 leading-relaxed">Berisi lampiran modul / makalah pembelajaran.</p>
+                        <p className="text-slate-500 text-sm mb-6 line-clamp-2 leading-relaxed">{m.description || 'Berisi lampiran modul / makalah pembelajaran.'}</p>
                         <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
                           <span>{new Date(m.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})}</span>
                           <span className="text-purple-600 group-hover:translate-x-1 transition-transform">Baca Modul →</span>
@@ -120,7 +120,7 @@ export default function MateriTambahan() {
                     <Link key={m.id} href={`/materi/${m.id}`} className="group block bg-white rounded-3xl border border-slate-200 overflow-hidden hover:border-pink-400 hover:shadow-xl hover:shadow-pink-600/10 transition-all hover:-translate-y-1">
                       <div className="p-8">
                         <h3 className="font-bold text-xl text-slate-900 mb-2 group-hover:text-pink-600 transition-colors">{m.title}</h3>
-                        <p className="text-slate-500 text-sm mb-6 line-clamp-2 leading-relaxed">Tayangan video pembelajaran interaktif.</p>
+                        <p className="text-slate-500 text-sm mb-6 line-clamp-2 leading-relaxed">{m.description || 'Tayangan video pembelajaran interaktif.'}</p>
                         <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
                           <span>{new Date(m.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})}</span>
                           <span className="text-pink-600 group-hover:translate-x-1 transition-transform">Tonton Video →</span>
