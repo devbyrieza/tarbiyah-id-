@@ -44,14 +44,12 @@ export default function AdminDashboard() {
   const logout = () => { localStorage.removeItem('pai_admin_token'); router.push('/admin/login') }
   
   const deleteMaterial = async (id: string) => {
-    if (isGuest) { alert('Akses Tamu tidak dapat menghapus materi.'); return; }
     if (!confirm('Hapus materi ini?')) return
     await supabase.from('materials').delete().eq('id', id)
     fetchAll()
   }
   
   const deleteQuiz = async (id: string) => {
-    if (isGuest) { alert('Akses Tamu tidak dapat menghapus kuis.'); return; }
     if (!confirm('Hapus kuis ini?')) return
     await supabase.from('quizzes').delete().eq('id', id)
     fetchAll()
@@ -285,11 +283,9 @@ function PPTTab({ materials, onDelete, onRefresh, isGuest }: { materials: Materi
                 {new Date(m.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'})}
               </span>
             </div>
-            {!isGuest && (
-              <button onClick={() => onDelete(m.id)} className="px-5 py-2.5 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-xl text-sm font-semibold transition-all flex-shrink-0">
-                Hapus
-              </button>
-            )}
+            <button onClick={() => onDelete(m.id)} className="px-5 py-2.5 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-xl text-sm font-semibold transition-all flex-shrink-0">
+              Hapus
+            </button>
           </div>
         ))}
         {materials.length === 0 && (
@@ -378,11 +374,9 @@ function MakalahTab({ materials, onDelete, onRefresh, isGuest }: { materials: Ma
                 {new Date(m.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'})}
               </span>
             </div>
-            {!isGuest && (
-              <button onClick={() => onDelete(m.id)} className="px-5 py-2.5 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-xl text-sm font-semibold transition-all flex-shrink-0">
-                Hapus
-              </button>
-            )}
+            <button onClick={() => onDelete(m.id)} className="px-5 py-2.5 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-xl text-sm font-semibold transition-all flex-shrink-0">
+              Hapus
+            </button>
           </div>
         ))}
         {materials.length === 0 && (
@@ -491,11 +485,9 @@ function VideosTab({ materials, onDelete, onRefresh, isGuest }: { materials: Mat
             <div className="p-6">
               <div className="flex items-start justify-between gap-4 mb-4">
                 <h3 className="text-slate-900 font-bold text-lg leading-tight">{m.title}</h3>
-                {!isGuest && (
-                  <button onClick={() => onDelete(m.id)} className="px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-lg text-xs font-bold transition-all flex-shrink-0">
-                    Hapus
-                  </button>
-                )}
+                <button onClick={() => onDelete(m.id)} className="px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-lg text-xs font-bold transition-all flex-shrink-0">
+                  Hapus
+                </button>
               </div>
               <p className="text-slate-500 text-sm leading-relaxed">
                 {m.content_url?.includes('youtube.com') ? '🔗 Video dari YouTube' : '📁 File Video Upload'}
@@ -685,11 +677,9 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
               <div className="w-12 h-12 bg-amber-50 border border-amber-100 rounded-xl flex items-center justify-center text-amber-500 flex-shrink-0">
                 <ClipboardList className="w-6 h-6" />
               </div>
-              {!isGuest && (
-                <button onClick={() => onDelete(q.id)} className="px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-lg text-xs font-bold transition-all flex-shrink-0">
-                  Hapus
-                </button>
-              )}
+              <button onClick={() => onDelete(q.id)} className="px-3 py-1.5 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-lg text-xs font-bold transition-all flex-shrink-0">
+                Hapus
+              </button>
             </div>
             <h3 className="text-slate-900 font-bold text-lg leading-tight mb-2">{q.title}</h3>
             <p className="text-slate-500 text-sm mb-4 line-clamp-2 leading-relaxed">
@@ -749,7 +739,6 @@ function ForumAdminTab({ isGuest }: { isGuest: boolean }) {
   }
 
   const deletePost = async () => {
-    if (isGuest) { alert('Akses Tamu tidak dapat menghapus diskusi.'); return; }
     if (!confirm('Hapus diskusi ini beserta seluruh balasannya?')) return
     
     // Deleting post will automatically cascade delete replies if database foreign key constraint is set to cascade.
@@ -762,7 +751,6 @@ function ForumAdminTab({ isGuest }: { isGuest: boolean }) {
   }
 
   const deleteReply = async (replyId: string) => {
-    if (isGuest) { alert('Akses Tamu tidak dapat menghapus balasan.'); return; }
     if (!confirm('Hapus balasan ini?')) return
     await supabase.from('forum_replies').delete().eq('id', replyId)
     openPost(selected)
@@ -786,11 +774,9 @@ function ForumAdminTab({ isGuest }: { isGuest: boolean }) {
               <p className="text-xs text-slate-500">{new Date(selected.created_at).toLocaleString('id-ID')}</p>
             </div>
           </div>
-          {!isGuest && (
-            <button onClick={deletePost} className="px-4 py-2 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-xl text-xs font-bold transition-all">
-              Hapus Diskusi
-            </button>
-          )}
+          <button onClick={deletePost} className="px-4 py-2 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-xl text-xs font-bold transition-all">
+            Hapus Diskusi
+          </button>
         </div>
         <h3 className="text-slate-900 font-extrabold text-xl mb-3">{selected.title}</h3>
         <p className="text-slate-700 leading-relaxed bg-slate-50 p-6 rounded-2xl border border-slate-100">{selected.body}</p>
@@ -810,11 +796,9 @@ function ForumAdminTab({ isGuest }: { isGuest: boolean }) {
                   <p className="text-xs text-slate-500">{new Date(r.created_at).toLocaleString('id-ID')}</p>
                 </div>
               </div>
-              {!isGuest && (
-                <button onClick={() => deleteReply(r.id)} className="text-rose-600 hover:text-rose-700 text-xs font-bold transition-all">
-                  Hapus
-                </button>
-              )}
+              <button onClick={() => deleteReply(r.id)} className="text-rose-600 hover:text-rose-700 text-xs font-bold transition-all">
+                Hapus
+              </button>
             </div>
             <p className="text-slate-700 text-sm leading-relaxed">{r.body}</p>
           </div>
