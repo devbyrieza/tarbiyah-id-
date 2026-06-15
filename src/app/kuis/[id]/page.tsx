@@ -26,6 +26,22 @@ export default function KuisPage() {
   }
 
   const fileExt = quiz?.description ? getFileExtension(quiz.description) : ''
+  
+  const getEmbeddableUrl = (url: string) => {
+    if (!url) return ''
+    if (url.includes('docs.google.com/forms') && !url.includes('embedded=true')) {
+      return url.includes('?') ? `${url}&embedded=true` : `${url}?embedded=true`
+    }
+    return url
+  }
+
+  const isWebLink = quiz?.description ? (
+    quiz.description.includes('forms.gle') || 
+    quiz.description.includes('docs.google.com/forms') || 
+    quiz.description.includes('quizizz.com') ||
+    quiz.description.includes('wordwall.net') ||
+    !['pdf', 'ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx'].includes(fileExt)
+  ) : false
 
   useEffect(() => {
     const fetch = async () => {
@@ -104,37 +120,53 @@ export default function KuisPage() {
 
           {quiz.questions.length === 0 && quiz.description?.startsWith('http') ? (
             <div className="p-6 md:p-8 bg-white">
-              {/* Clean header for the quiz document viewer */}
+              {/* Clean header for the quiz viewer */}
               <div className="flex items-center justify-between px-6 py-4 bg-slate-100 border border-slate-200 border-b-0 rounded-t-3xl">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                    <BookOpen className="w-4 h-4 text-blue-600" />
+                    <BookOpen className="w-4 h-4 text-amber-500" />
                   </div>
                   <span className="font-bold text-slate-800 text-sm truncate max-w-[200px] sm:max-w-[350px]">
-                    {quiz.title}
+                    {isWebLink ? 'Google Form / Kuis Eksternal' : quiz.title}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <a
-                    href={quiz.description}
-                    download
-                    className="px-3.5 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-lg text-xs transition-all shadow-sm flex items-center gap-1.5"
-                  >
-                    Unduh File
-                  </a>
+                  {!isWebLink && (
+                    <a
+                      href={quiz.description}
+                      download
+                      className="px-3.5 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-lg text-xs transition-all shadow-sm flex items-center gap-1.5"
+                    >
+                      Unduh File
+                    </a>
+                  )}
                   <a
                     href={quiz.description}
                     target="_blank"
                     rel="noreferrer"
                     className="px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg text-xs transition-all shadow-sm flex items-center gap-1.5"
                   >
-                    Buka Penuh
+                    {isWebLink ? 'Buka di Tab Baru' : 'Buka Penuh'}
                   </a>
                 </div>
               </div>
 
-              {/* Embedded Quiz Document Viewer */}
-              {fileExt === 'pdf' ? (
+              {/* Embedded Viewer */}
+              {isWebLink ? (
+                <div className="w-full bg-slate-50 border border-slate-200 rounded-b-3xl overflow-hidden p-1 flex flex-col">
+                  {/* Warning/Guideline for Google Form iframes */}
+                  <div className="p-4 bg-amber-50 text-amber-800 text-xs font-semibold border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-2">
+                    <span>💡 Silakan kerjakan kuis pada form di bawah. Jika tidak muncul, klik tombol di kanan atas untuk membuka di tab baru.</span>
+                  </div>
+                  <div className="w-full aspect-[4/5] min-h-[650px]">
+                    <iframe 
+                      src={getEmbeddableUrl(quiz.description)} 
+                      className="w-full h-full border-none bg-white"
+                      allow="autoplay"
+                    />
+                  </div>
+                </div>
+              ) : fileExt === 'pdf' ? (
                 <div className="w-full aspect-[1/1.4] bg-slate-100 border border-slate-200 rounded-b-3xl overflow-hidden shadow-inner">
                   <iframe src={quiz.description} className="w-full h-full border-none" />
                 </div>

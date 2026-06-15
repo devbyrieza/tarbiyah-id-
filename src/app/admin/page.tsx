@@ -514,7 +514,8 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
   const [title, setTitle] = useState('')
   const [questions, setQuestions] = useState<{ text: string; options: string[]; correct: number }[]>([])
   const [file, setFile] = useState<File | null>(null)
-  const [uploadType, setUploadType] = useState<'manual' | 'file'>('manual')
+  const [uploadType, setUploadType] = useState<'manual' | 'file' | 'google_form'>('manual')
+  const [googleFormUrl, setGoogleFormUrl] = useState('')
   const [saving, setSaving] = useState(false)
 
   const addQuestion = () => {
@@ -542,6 +543,7 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
     e.preventDefault()
     if (uploadType === 'manual' && questions.length === 0) { alert('Tambahkan minimal 1 soal!'); return }
     if (uploadType === 'file' && !file) { alert('Pilih file kuis terlebih dahulu!'); return }
+    if (uploadType === 'google_form' && !googleFormUrl) { alert('Masukkan URL Google Form!'); return }
     
     setSaving(true)
     let description = ''
@@ -559,6 +561,9 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
       const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
       description = data.publicUrl
       finalQuestions = [] // empty questions for file upload
+    } else if (uploadType === 'google_form') {
+      description = googleFormUrl
+      finalQuestions = []
     }
 
     const { error: dbError } = await supabase.from('quizzes').insert([{ title, description, questions: finalQuestions }])
@@ -568,7 +573,7 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
       return
     }
     
-    setTitle(''); setQuestions([]); setFile(null); setShowForm(false)
+    setTitle(''); setQuestions([]); setFile(null); setGoogleFormUrl(''); setShowForm(false)
     onRefresh(); setSaving(false)
   }
 
@@ -591,65 +596,66 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
               <input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="Contoh: Kuis Bab 1 - Rukun Islam" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 transition-all" />
             </div>
             
-            <div className="flex gap-4">
-              <button type="button" onClick={() => setUploadType('manual')} className={`flex flex-1 items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border transition-all ${uploadType==='manual' ? 'bg-amber-50 border-amber-200 text-amber-600 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}><ClipboardList className="w-4 h-4" /> Buat Kuis Interaktif (Manual)</button>
-              <button type="button" onClick={() => setUploadType('file')} className={`flex flex-1 items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border transition-all ${uploadType==='file' ? 'bg-blue-50 border-blue-200 text-blue-600 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}><FolderUp className="w-4 h-4" /> Upload File Soal (PDF/Word)</button>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button type="button" onClick={() => setUploadType('manual')} className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border transition-all ${uploadType==='manual' ? 'bg-amber-50 border-amber-200 text-amber-600 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}><ClipboardList className="w-4 h-4" /> Kuis Interaktif (Manual)</button>
+              <button type="button" onClick={() => setUploadType('file')} className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border transition-all ${uploadType==='file' ? 'bg-blue-50 border-blue-200 text-blue-600 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}><FolderUp className="w-4 h-4" /> Upload File Soal (PDF/Word)</button>
+              <button type="button" onClick={() => setUploadType('google_form')} className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border transition-all ${uploadType==='google_form' ? 'bg-purple-50 border-purple-200 text-purple-600 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}><Globe className="w-4 h-4" /> Link Google Form / Web</button>
             </div>
           </div>
 
-          {uploadType === 'manual' ? (
+          {uploadType === 'manual' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <h3 className="font-bold text-slate-900">Soal-soal ({questions.length})</h3>
-              <button type="button" onClick={addQuestion} className="px-4 py-2 bg-amber-50 text-amber-600 border border-amber-200 font-bold text-xs rounded-xl hover:bg-amber-100 transition-all">+ Tambah Soal</button>
-            </div>
-            
-            {questions.map((q, qi) => (
-              <div key={qi} className="bg-slate-50 border border-slate-200 rounded-2xl p-6 space-y-4">
-                <div className="flex items-start gap-4">
-                  <span className="w-8 h-8 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0">{qi+1}</span>
-                  <div className="flex-1 space-y-4">
-                    <input
-                      required
-                      value={q.text}
-                      onChange={e => updateQuestion(qi, 'text', e.target.value)}
-                      placeholder={`Teks pertanyaan...`}
-                      className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all"
-                    />
-                    
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {q.options.map((opt, oi) => (
-                        <div key={oi} className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border transition-all ${q.correct === oi ? 'bg-emerald-50 border-emerald-300 shadow-sm' : 'bg-white border-slate-200'}`}>
-                          <span className={`text-xs font-black flex-shrink-0 ${q.correct === oi ? 'text-emerald-600' : 'text-slate-400'}`}>
-                            {['A','B','C','D'][oi]}
-                          </span>
-                          <input
-                            required
-                            value={opt}
-                            onChange={e => updateOption(qi, oi, e.target.value)}
-                            placeholder={`Pilihan ${['A','B','C','D'][oi]}`}
-                            className="flex-1 bg-transparent text-sm text-slate-800 focus:outline-none min-w-0 font-medium"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <div className="flex items-center justify-between pt-2">
-                      <div className="flex items-center gap-3">
-                        <label className="text-xs text-slate-600 font-bold">Kunci Jawaban:</label>
-                        <select value={q.correct} onChange={e => updateQuestion(qi, 'correct', e.target.value)} className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-700 text-xs font-bold focus:outline-none cursor-pointer">
-                          <option value={0}>Pilihan A</option>
-                          <option value={1}>Pilihan B</option>
-                          <option value={2}>Pilihan C</option>
-                          <option value={3}>Pilihan D</option>
-                        </select>
+                <h3 className="font-bold text-slate-900">Soal-soal ({questions.length})</h3>
+                <button type="button" onClick={addQuestion} className="px-4 py-2 bg-amber-50 text-amber-600 border border-amber-200 font-bold text-xs rounded-xl hover:bg-amber-100 transition-all">+ Tambah Soal</button>
+              </div>
+              
+              {questions.map((q, qi) => (
+                <div key={qi} className="bg-slate-50 border border-slate-200 rounded-2xl p-6 space-y-4">
+                  <div className="flex items-start gap-4">
+                    <span className="w-8 h-8 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-sm font-black flex-shrink-0">{qi+1}</span>
+                    <div className="flex-1 space-y-4">
+                      <input
+                        required
+                        value={q.text}
+                        onChange={e => updateQuestion(qi, 'text', e.target.value)}
+                        placeholder={`Teks pertanyaan...`}
+                        className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 transition-all"
+                      />
+                      
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        {q.options.map((opt, oi) => (
+                          <div key={oi} className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border transition-all ${q.correct === oi ? 'bg-emerald-50 border-emerald-300 shadow-sm' : 'bg-white border-slate-200'}`}>
+                            <span className={`text-xs font-black flex-shrink-0 ${q.correct === oi ? 'text-emerald-600' : 'text-slate-400'}`}>
+                              {['A','B','C','D'][oi]}
+                            </span>
+                            <input
+                              required
+                              value={opt}
+                              onChange={e => updateOption(qi, oi, e.target.value)}
+                              placeholder={`Pilihan ${['A','B','C','D'][oi]}`}
+                              className="flex-1 bg-transparent text-sm text-slate-800 focus:outline-none min-w-0 font-medium"
+                            />
+                          </div>
+                        ))}
                       </div>
-                      <button type="button" onClick={() => removeQuestion(qi)} className="text-rose-600 hover:text-rose-700 text-xs font-bold">Hapus Soal</button>
+                      
+                      <div className="flex items-center justify-between pt-2">
+                        <div className="flex items-center gap-3">
+                          <label className="text-xs text-slate-600 font-bold">Kunci Jawaban:</label>
+                          <select value={q.correct} onChange={e => updateQuestion(qi, 'correct', e.target.value)} className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-700 text-xs font-bold focus:outline-none cursor-pointer">
+                            <option value={0}>Pilihan A</option>
+                            <option value={1}>Pilihan B</option>
+                            <option value={2}>Pilihan C</option>
+                            <option value={3}>Pilihan D</option>
+                          </select>
+                        </div>
+                        <button type="button" onClick={() => removeQuestion(qi)} className="text-rose-600 hover:text-rose-700 text-xs font-bold">Hapus Soal</button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
               
               {questions.length === 0 && (
                 <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
@@ -657,15 +663,25 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
                 </div>
               )}
             </div>
-          ) : (
+          )}
+
+          {uploadType === 'file' && (
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-2">Pilih File Soal Ujian</label>
               <input required={uploadType === 'file'} type="file" onChange={e=>setFile(e.target.files?.[0]||null)} className="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-600 file:text-sm file:font-bold hover:file:bg-blue-100 transition-all" />
             </div>
           )}
 
-          <button disabled={saving} type="submit" className={`w-full py-4 ${uploadType === 'file' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-amber-500 hover:bg-amber-600'} text-white font-extrabold rounded-xl text-sm shadow-md disabled:opacity-50 transition-all mt-6`}>
-            {saving ? 'Menyimpan...' : `✓ Simpan Kuis ${uploadType === 'manual' ? `(${questions.length} soal)` : '(File Upload)'}`}
+          {uploadType === 'google_form' && (
+            <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Link Google Form / Link Kuis Eksternal</label>
+              <input required={uploadType === 'google_form'} type="url" value={googleFormUrl} onChange={e=>setGoogleFormUrl(e.target.value)} placeholder="Contoh: https://forms.gle/R8izihBhARrBkYr49" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-amber-500 focus:bg-white focus:ring-4 focus:ring-amber-500/10 transition-all" />
+              <p className="text-xs text-slate-500 mt-2">*Mendukung Google Forms, Quizizz, Wordwall, dll. Link akan langsung di-embed dan ditayangkan dalam website.</p>
+            </div>
+          )}
+
+          <button disabled={saving} type="submit" className={`w-full py-4 ${uploadType === 'file' ? 'bg-blue-600 hover:bg-blue-700' : uploadType === 'google_form' ? 'bg-purple-600 hover:bg-purple-700' : 'bg-amber-500 hover:bg-amber-600'} text-white font-extrabold rounded-xl text-sm shadow-md disabled:opacity-50 transition-all mt-6`}>
+            {saving ? 'Menyimpan...' : `✓ Simpan Kuis ${uploadType === 'manual' ? `(${questions.length} soal)` : uploadType === 'file' ? '(File Upload)' : '(Link Google Form)'}`}
           </button>
         </form>
       )}
