@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-slate-50">
+    <section className="relative pt-28 pb-12 md:pt-36 md:pb-16 overflow-hidden bg-slate-50">
       {/* Dynamic Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-teal-100 rounded-full blur-3xl opacity-50 anim-float"></div>
@@ -23,11 +23,8 @@ export default function Hero() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center anim-fade-in" style={{ animationDelay: '0.3s' }}>
-            <a href="#materi" className="px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-teal-600/20 hover:-translate-y-1 flex items-center justify-center gap-2">
+            <a href="#materi" className="px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-2xl transition-all shadow-lg shadow-teal-600/20 hover:-translate-y-1 flex items-center justify-center gap-2 mx-auto">
               Mulai Belajar <span>→</span>
-            </a>
-            <a href="#petunjuk" className="px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold rounded-2xl transition-all shadow-sm hover:-translate-y-1 flex items-center justify-center gap-2">
-              Cara Penggunaan
             </a>
           </div>
         </div>

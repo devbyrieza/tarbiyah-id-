@@ -40,7 +40,6 @@ export default function Navbar() {
         </Link>
         
         <div className="hidden md:flex gap-8 items-center">
-          <Link href="/#petunjuk" className="text-sm font-semibold text-slate-600 hover:text-teal-600 transition-colors">Petunjuk</Link>
           <Link href="/#materi" className="text-sm font-semibold text-slate-600 hover:text-teal-600 transition-colors">Materi</Link>
           <Link href="/#evaluasi" className="text-sm font-semibold text-slate-600 hover:text-teal-600 transition-colors">Evaluasi</Link>
           <Link href="/forum" className="text-sm font-semibold text-slate-600 hover:text-teal-600 transition-colors">Forum Diskusi</Link>
@@ -58,7 +57,6 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-white border-b border-slate-200 px-6 py-4 space-y-4">
-          <Link href="/#petunjuk" onClick={() => setIsOpen(false)} className="block text-sm font-semibold text-slate-600">Petunjuk</Link>
           <Link href="/#materi" onClick={() => setIsOpen(false)} className="block text-sm font-semibold text-slate-600">Materi</Link>
           <Link href="/#evaluasi" onClick={() => setIsOpen(false)} className="block text-sm font-semibold text-slate-600">Evaluasi</Link>
           <Link href="/forum" onClick={() => setIsOpen(false)} className="block text-sm font-semibold text-slate-600">Forum Diskusi</Link>
