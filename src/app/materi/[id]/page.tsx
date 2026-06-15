@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation'
 import { supabase, Material } from '@/lib/supabase'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
-import { ArrowLeft, Video, FileText, ArrowRight, Presentation, BookOpen } from 'lucide-react'
+import { ArrowLeft, Video, FileText, ArrowRight, Presentation, BookOpen, MessageCircle } from 'lucide-react'
 
 export default function MateriPage() {
   const { id } = useParams<{ id: string }>()
@@ -129,10 +129,23 @@ export default function MateriPage() {
             )}
 
             {material.content_text && (
-              <div className="prose prose-lg prose-slate prose-headings:text-slate-900 prose-headings:font-bold prose-p:text-slate-700 prose-li:text-slate-700 prose-a:text-teal-600 max-w-none">
+              <div className="prose prose-lg prose-slate prose-headings:text-slate-900 prose-headings:font-bold prose-p:text-slate-700 prose-li:text-slate-700 prose-a:text-teal-600 max-w-none mt-8 border-t border-slate-100 pt-8">
                 <ReactMarkdown>{material.content_text}</ReactMarkdown>
               </div>
             )}
+
+            {/* Q&A Contextual Forum Card */}
+            <div className="mt-12 p-8 bg-teal-50/50 border border-teal-200/60 rounded-[2rem] flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div>
+                <h3 className="font-extrabold text-slate-900 text-lg mb-1 flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5 text-teal-600" /> Ada Pertanyaan Mengenai Materi Ini?
+                </h3>
+                <p className="text-sm text-slate-600">Tanyakan atau diskusikan langsung materi ini bersama pengajar di forum tanya jawab kami.</p>
+              </div>
+              <Link href={`/forum?materi=${encodeURIComponent(material.title)}`} className="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm transition-all shadow-md flex items-center gap-2 w-full sm:w-auto justify-center flex-shrink-0">
+                Tanya di Forum &rarr;
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -118,7 +118,7 @@ export default function AdminDashboard() {
           {tab === 'makalah' && <MakalahTab materials={materials.filter(m=>m.type==='makalah')} onDelete={deleteMaterial} onRefresh={fetchAll} isGuest={isGuest} />}
           {tab === 'videos' && <VideosTab materials={materials.filter(m=>m.type==='video')} onDelete={deleteMaterial} onRefresh={fetchAll} isGuest={isGuest} />}
           {tab === 'quizzes' && <QuizzesTab quizzes={quizzes} onDelete={deleteQuiz} onRefresh={fetchAll} isGuest={isGuest} />}
-          {tab === 'forum' && <ForumAdminTab />}
+          {tab === 'forum' && <ForumAdminTab isGuest={isGuest} />}
         </div>
       </main>
     </div>
@@ -678,7 +678,7 @@ function QuizzesTab({ quizzes, onDelete, onRefresh, isGuest }: { quizzes: Quiz[]
 }
 
 /* ── Forum Admin View ─────────────────────────────────────── */
-function ForumAdminTab() {
+function ForumAdminTab({ isGuest }: { isGuest: boolean }) {
   const [posts, setPosts] = useState<any[]>([])
   const [selected, setSelected] = useState<any>(null)
   const [replies, setReplies] = useState<any[]>([])
@@ -689,7 +689,7 @@ function ForumAdminTab() {
 
   const fetchPosts = async () => {
     setLoading(true)
-    const { data } = await supabase.from('forum_posts').select('*, forum_replies(count)').order('created_at', { ascending: false })
+    const { data } = await supabase.from('forum_posts').select('*, forum_replies(id, is_admin)').order('created_at', { ascending: false })
     if (data) setPosts(data)
     setLoading(false)
   }
@@ -706,6 +706,28 @@ function ForumAdminTab() {
     await supabase.from('forum_replies').insert([{ post_id: selected.id, body: replyText, author_name: 'Pengajar (Fikri)', is_admin: true }])
     setReplyText('')
     openPost(selected)
+    fetchPosts()
+  }
+
+  const deletePost = async () => {
+    if (isGuest) { alert('Akses Tamu tidak dapat menghapus diskusi.'); return; }
+    if (!confirm('Hapus diskusi ini beserta seluruh balasannya?')) return
+    
+    // Deleting post will automatically cascade delete replies if database foreign key constraint is set to cascade.
+    // To be perfectly safe, let's delete the replies first manually.
+    await supabase.from('forum_replies').delete().eq('post_id', selected.id)
+    await supabase.from('forum_posts').delete().eq('id', selected.id)
+    
+    setSelected(null)
+    fetchPosts()
+  }
+
+  const deleteReply = async (replyId: string) => {
+    if (isGuest) { alert('Akses Tamu tidak dapat menghapus balasan.'); return; }
+    if (!confirm('Hapus balasan ini?')) return
+    await supabase.from('forum_replies').delete().eq('id', replyId)
+    openPost(selected)
+    fetchPosts()
   }
 
   if (selected) return (
@@ -715,14 +737,21 @@ function ForumAdminTab() {
       </button>
       
       <div className="bg-white border border-slate-200 shadow-sm rounded-3xl p-8 mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 font-bold text-sm">
-            {selected.author_name.charAt(0).toUpperCase()}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 font-bold text-sm">
+              {selected.author_name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p className="font-bold text-slate-900 text-sm">{selected.author_name}</p>
+              <p className="text-xs text-slate-500">{new Date(selected.created_at).toLocaleString('id-ID')}</p>
+            </div>
           </div>
-          <div>
-            <p className="font-bold text-slate-900 text-sm">{selected.author_name}</p>
-            <p className="text-xs text-slate-500">{new Date(selected.created_at).toLocaleString('id-ID')}</p>
-          </div>
+          {!isGuest && (
+            <button onClick={deletePost} className="px-4 py-2 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-xl text-xs font-bold transition-all">
+              Hapus Diskusi
+            </button>
+          )}
         </div>
         <h3 className="text-slate-900 font-extrabold text-xl mb-3">{selected.title}</h3>
         <p className="text-slate-700 leading-relaxed bg-slate-50 p-6 rounded-2xl border border-slate-100">{selected.body}</p>
@@ -732,14 +761,21 @@ function ForumAdminTab() {
         <h4 className="font-bold text-slate-900 text-sm mb-4">Balasan ({replies.length})</h4>
         {replies.map(r => (
           <div key={r.id} className={`p-6 rounded-2xl border shadow-sm ${r.is_admin ? 'bg-teal-50 border-teal-200' : 'bg-white border-slate-200'}`}>
-            <div className="flex items-center gap-3 mb-3">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${r.is_admin ? 'bg-teal-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
-                {r.is_admin ? <GraduationCap className="w-4 h-4" /> : r.author_name.charAt(0).toUpperCase()}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${r.is_admin ? 'bg-teal-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                  {r.is_admin ? <GraduationCap className="w-4 h-4" /> : r.author_name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className={`text-sm font-bold ${r.is_admin ? 'text-teal-700' : 'text-slate-900'}`}>{r.author_name}</p>
+                  <p className="text-xs text-slate-500">{new Date(r.created_at).toLocaleString('id-ID')}</p>
+                </div>
               </div>
-              <div>
-                <p className={`text-sm font-bold ${r.is_admin ? 'text-teal-700' : 'text-slate-900'}`}>{r.author_name}</p>
-                <p className="text-xs text-slate-500">{new Date(r.created_at).toLocaleString('id-ID')}</p>
-              </div>
+              {!isGuest && (
+                <button onClick={() => deleteReply(r.id)} className="text-rose-600 hover:text-rose-700 text-xs font-bold transition-all">
+                  Hapus
+                </button>
+              )}
             </div>
             <p className="text-slate-700 text-sm leading-relaxed">{r.body}</p>
           </div>
@@ -770,23 +806,26 @@ function ForumAdminTab() {
         </div>
       ) : (
         <div className="space-y-4">
-          {posts.map(p => (
-            <button key={p.id} onClick={() => openPost(p)} className="w-full text-left bg-white border border-slate-200 hover:border-teal-400 hover:shadow-md shadow-sm rounded-3xl p-6 transition-all group">
-              <div className="flex items-start justify-between gap-4 mb-3">
-                <h3 className="text-slate-900 font-bold text-lg group-hover:text-teal-600 transition-colors">{p.title}</h3>
-                <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold flex-shrink-0 flex items-center gap-1">
-                  <MessageCircle className="w-3.5 h-3.5" /> {p.forum_replies?.[0]?.count || 0}
-                </span>
-              </div>
-              <p className="text-slate-500 text-sm line-clamp-2 leading-relaxed mb-4">{p.body}</p>
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 font-bold text-xs">
-                  {p.author_name.charAt(0).toUpperCase()}
+          {posts.map(p => {
+            const replyCount = p.forum_replies?.length || 0;
+            return (
+              <button key={p.id} onClick={() => openPost(p)} className="w-full text-left bg-white border border-slate-200 hover:border-teal-400 hover:shadow-md shadow-sm rounded-3xl p-6 transition-all group">
+                <div className="flex items-start justify-between gap-4 mb-3">
+                  <h3 className="text-slate-900 font-bold text-lg group-hover:text-teal-600 transition-colors">{p.title}</h3>
+                  <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold flex-shrink-0 flex items-center gap-1">
+                    <MessageCircle className="w-3.5 h-3.5" /> {replyCount}
+                  </span>
                 </div>
-                <p className="text-slate-500 text-xs font-medium">{p.author_name} • {new Date(p.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'long'})}</p>
-              </div>
-            </button>
-          ))}
+                <p className="text-slate-500 text-sm line-clamp-2 leading-relaxed mb-4">{p.body}</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 font-bold text-xs">
+                    {p.author_name.charAt(0).toUpperCase()}
+                  </div>
+                  <p className="text-slate-500 text-xs font-medium">{p.author_name} • {new Date(p.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'long'})}</p>
+                </div>
+              </button>
+            )
+          })}
           {posts.length === 0 && (
             <div className="text-center py-16 bg-white border border-slate-200 rounded-3xl border-dashed">
               <div className="flex justify-center mb-4 text-slate-300">

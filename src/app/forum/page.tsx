@@ -21,11 +21,21 @@ export default function ForumPage() {
   const [replyAuthor, setReplyAuthor] = useState('')
   const [replying, setReplying] = useState(false)
 
-  useEffect(() => { fetchPosts() }, [])
+  useEffect(() => {
+    fetchPosts()
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const materi = params.get('materi')
+      if (materi) {
+        setTitle(`Tanya tentang: ${materi}`)
+        setShowForm(true)
+      }
+    }
+  }, [])
 
   const fetchPosts = async () => {
     setLoading(true)
-    const { data } = await supabase.from('forum_posts').select('*, forum_replies(count)').order('created_at', { ascending: false })
+    const { data } = await supabase.from('forum_posts').select('*, forum_replies(id, is_admin)').order('created_at', { ascending: false })
     if (data) setPosts(data)
     setLoading(false)
   }
@@ -110,26 +120,38 @@ export default function ForumPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {posts.map(post => (
-                  <div key={post.id} className="bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 rounded-3xl p-6 md:p-8 transition-all group cursor-pointer" onClick={() => { setSelectedPost(post); fetchReplies(post.id); }}>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 font-bold text-sm">
-                        {post.author_name.charAt(0).toUpperCase()}
+                {posts.map(post => {
+                  const repliesList = (post as any).forum_replies || []
+                  const isSolved = repliesList.some((r: any) => r.is_admin)
+                  const replyCount = repliesList.length
+                  return (
+                    <div key={post.id} className="bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 rounded-3xl p-6 md:p-8 transition-all group cursor-pointer" onClick={() => { setSelectedPost(post); fetchReplies(post.id); }}>
+                      <div className="flex items-center justify-between gap-4 mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 font-bold text-sm">
+                            {post.author_name.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-900 text-sm">{post.author_name}</p>
+                            <p className="text-xs text-slate-500">{new Date(post.created_at).toLocaleString('id-ID')}</p>
+                          </div>
+                        </div>
+                        {isSolved && (
+                          <span className="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-lg flex items-center gap-1.5 shadow-sm">
+                            <GraduationCap className="w-3.5 h-3.5" /> Terjawab oleh Pengajar
+                          </span>
+                        )}
                       </div>
-                      <div>
-                        <p className="font-bold text-slate-900 text-sm">{post.author_name}</p>
-                        <p className="text-xs text-slate-500">{new Date(post.created_at).toLocaleString('id-ID')}</p>
+                      <h3 className="text-xl font-extrabold text-slate-900 mb-2 group-hover:text-teal-600 transition-colors">{post.title}</h3>
+                      <p className="text-slate-600 mb-4 line-clamp-2 leading-relaxed">{post.body}</p>
+                      <div className="flex items-center gap-2 text-sm font-bold text-slate-500">
+                        <span className="bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 flex items-center gap-1.5">
+                          <MessageCircle className="w-4 h-4" /> {replyCount} Balasan
+                        </span>
                       </div>
                     </div>
-                    <h3 className="text-xl font-extrabold text-slate-900 mb-2 group-hover:text-teal-600 transition-colors">{post.title}</h3>
-                    <p className="text-slate-600 mb-4 line-clamp-2 leading-relaxed">{post.body}</p>
-                    <div className="flex items-center gap-2 text-sm font-bold text-slate-500">
-                      <span className="bg-slate-50 px-3 py-1 rounded-lg border border-slate-100 flex items-center gap-1.5">
-                        <MessageCircle className="w-4 h-4" /> {(post as any).forum_replies?.[0]?.count || 0} Balasan
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
                 {posts.length === 0 && (
                   <div className="text-center py-20 bg-white border border-slate-200 rounded-3xl">
                     <p className="text-slate-500 font-medium">Belum ada diskusi. Jadilah yang pertama bertanya!</p>
