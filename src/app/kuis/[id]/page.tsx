@@ -91,7 +91,7 @@ export default function KuisPage() {
             {quiz.questions.length > 0 && <p className="text-slate-500 text-sm">Kuis Interaktif Pilihan Ganda</p>}
           </div>
 
-          {quiz.questions.length === 0 && quiz.description.startsWith('http') ? (
+          {quiz.questions.length === 0 && quiz.description?.startsWith('http') ? (
             <div className="p-8 md:p-12 text-center bg-white">
               <div className="flex justify-center mb-6 text-blue-500">
                 <BookOpen className="w-20 h-20" />
