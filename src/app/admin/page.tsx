@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { supabase, Material, Quiz } from '@/lib/supabase'
 import { BookOpenCheck, LogOut, BarChart2, FileText, Video, ClipboardList, MessageCircle, Globe, Hand, Pin, PlayCircle, FolderUp, GraduationCap } from 'lucide-react'
 
-type Tab = 'overview' | 'articles' | 'videos' | 'quizzes' | 'forum'
+type Tab = 'overview' | 'ppt' | 'makalah' | 'videos' | 'quizzes' | 'forum'
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -13,7 +13,7 @@ export default function AdminDashboard() {
   const [materials, setMaterials] = useState<Material[]>([])
   const [quizzes, setQuizzes] = useState<Quiz[]>([])
   const [loading, setLoading] = useState(true)
-  const [stats, setStats] = useState({ articles: 0, videos: 0, quizzes: 0, forum: 0 })
+  const [stats, setStats] = useState({ ppt: 0, makalah: 0, videos: 0, quizzes: 0, forum: 0 })
 
   useEffect(() => {
     const token = localStorage.getItem('pai_admin_token')
@@ -31,9 +31,10 @@ export default function AdminDashboard() {
     ])
     if (mRes.data) setMaterials(mRes.data)
     if (qRes.data) setQuizzes(qRes.data)
-    const articles = (mRes.data || []).filter(m => m.type === 'article').length
+    const ppt = (mRes.data || []).filter(m => m.type === 'ppt').length
+    const makalah = (mRes.data || []).filter(m => m.type === 'makalah').length
     const videos = (mRes.data || []).filter(m => m.type === 'video').length
-    setStats({ articles, videos, quizzes: qRes.data?.length || 0, forum: fRes.count || 0 })
+    setStats({ ppt, makalah, videos, quizzes: qRes.data?.length || 0, forum: fRes.count || 0 })
     setLoading(false)
   }
 
@@ -55,7 +56,8 @@ export default function AdminDashboard() {
 
   const navItems: { key: Tab; label: string; icon: React.ReactNode }[] = [
     { key: 'overview', label: 'Ringkasan', icon: <BarChart2 className="w-5 h-5" /> },
-    { key: 'articles', label: 'Artikel', icon: <FileText className="w-5 h-5" /> },
+    { key: 'ppt', label: 'Bahan Tayang (PPT)', icon: <BookOpenCheck className="w-5 h-5" /> },
+    { key: 'makalah', label: 'Modul / Makalah', icon: <FileText className="w-5 h-5" /> },
     { key: 'videos', label: 'Video', icon: <Video className="w-5 h-5" /> },
     { key: 'quizzes', label: 'Kuis', icon: <ClipboardList className="w-5 h-5" /> },
     { key: 'forum', label: 'Forum', icon: <MessageCircle className="w-5 h-5" /> },
@@ -112,7 +114,8 @@ export default function AdminDashboard() {
       <main className="flex-1 overflow-y-auto">
         <div className="p-4 md:p-8 max-w-6xl mx-auto">
           {tab === 'overview' && <OverviewTab stats={stats} loading={loading} />}
-          {tab === 'articles' && <ArticlesTab materials={materials.filter(m=>m.type==='article')} onDelete={deleteMaterial} onRefresh={fetchAll} isGuest={isGuest} />}
+          {tab === 'ppt' && <PPTTab materials={materials.filter(m=>m.type==='ppt')} onDelete={deleteMaterial} onRefresh={fetchAll} isGuest={isGuest} />}
+          {tab === 'makalah' && <MakalahTab materials={materials.filter(m=>m.type==='makalah')} onDelete={deleteMaterial} onRefresh={fetchAll} isGuest={isGuest} />}
           {tab === 'videos' && <VideosTab materials={materials.filter(m=>m.type==='video')} onDelete={deleteMaterial} onRefresh={fetchAll} isGuest={isGuest} />}
           {tab === 'quizzes' && <QuizzesTab quizzes={quizzes} onDelete={deleteQuiz} onRefresh={fetchAll} isGuest={isGuest} />}
           {tab === 'forum' && <ForumAdminTab />}
@@ -125,8 +128,8 @@ export default function AdminDashboard() {
 /* ── Overview ─────────────────────────────────────────────── */
 function OverviewTab({ stats, loading }: { stats: any, loading: boolean }) {
   const cards = [
-    { label: 'Artikel', value: stats.articles, icon: <FileText className="w-6 h-6" />, color: 'from-blue-500 to-cyan-500', bg: 'bg-blue-50', border: 'border-blue-100' },
-    { label: 'Video', value: stats.videos, icon: <Video className="w-6 h-6" />, color: 'from-purple-500 to-pink-500', bg: 'bg-purple-50', border: 'border-purple-100' },
+    { label: 'Bahan Tayang', value: stats.ppt, icon: <BookOpenCheck className="w-6 h-6" />, color: 'from-blue-500 to-cyan-500', bg: 'bg-blue-50', border: 'border-blue-100' },
+    { label: 'Modul & Makalah', value: stats.makalah, icon: <FileText className="w-6 h-6" />, color: 'from-purple-500 to-pink-500', bg: 'bg-purple-50', border: 'border-purple-100' },
     { label: 'Kuis', value: stats.quizzes, icon: <ClipboardList className="w-6 h-6" />, color: 'from-amber-500 to-orange-500', bg: 'bg-amber-50', border: 'border-amber-100' },
     { label: 'Diskusi Forum', value: stats.forum, icon: <MessageCircle className="w-6 h-6" />, color: 'from-teal-500 to-emerald-500', bg: 'bg-teal-50', border: 'border-teal-100' },
   ]
@@ -206,34 +209,29 @@ function OverviewTab({ stats, loading }: { stats: any, loading: boolean }) {
   )
 }
 
-/* ── Articles ─────────────────────────────────────────────── */
-function ArticlesTab({ materials, onDelete, onRefresh, isGuest }: { materials: Material[], onDelete: (id:string)=>void, onRefresh: ()=>void, isGuest: boolean }) {
+/* ── PPT (Bahan Tayang) ─────────────────────────────────────────────── */
+function PPTTab({ materials, onDelete, onRefresh, isGuest }: { materials: Material[], onDelete: (id:string)=>void, onRefresh: ()=>void, isGuest: boolean }) {
   const [showForm, setShowForm] = useState(false)
   const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
   const [file, setFile] = useState<File | null>(null)
-  const [uploadType, setUploadType] = useState<'markdown' | 'file'>('markdown')
   const [saving, setSaving] = useState(false)
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!file) return alert('Pilih file PPT/PDF terlebih dahulu')
     setSaving(true)
     let content_url = null
-    let content_text = content
 
-    if (uploadType === 'file' && file) {
-      const ext = file.name.split('.').pop()
-      const path = `${Date.now()}.${ext}`
-      const { error } = await supabase.storage.from('learning-files').upload(path, file)
-      if (!error) {
-        const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
-        content_url = data.publicUrl
-        content_text = '' // no markdown if file is uploaded
-      }
+    const ext = file.name.split('.').pop()
+    const path = `${Date.now()}.${ext}`
+    const { error } = await supabase.storage.from('learning-files').upload(path, file)
+    if (!error) {
+      const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
+      content_url = data.publicUrl
     }
 
-    await supabase.from('materials').insert([{ title, description: '', type: 'article', content_text, content_url }])
-    setTitle(''); setContent(''); setFile(null); setShowForm(false)
+    await supabase.from('materials').insert([{ title, description: '', type: 'ppt', content_url }])
+    setTitle(''); setFile(null); setShowForm(false)
     onRefresh(); setSaving(false)
   }
 
@@ -241,53 +239,120 @@ function ArticlesTab({ materials, onDelete, onRefresh, isGuest }: { materials: M
     <div className="anim-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-          <FileText className="w-6 h-6 text-blue-500" /> Manajemen Artikel
+          <BookOpenCheck className="w-6 h-6 text-blue-500" /> Manajemen Bahan Tayang (PPT)
         </h2>
-        <button onClick={() => setShowForm(!showForm)} className="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm transition-all shadow-sm">
-          {showForm ? '✕ Batal' : '+ Tulis Artikel Baru'}
+        <button onClick={() => setShowForm(!showForm)} className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all shadow-sm">
+          {showForm ? '✕ Batal' : '+ Upload PPT Baru'}
         </button>
       </div>
       
       {showForm && (
         <form onSubmit={save} className="bg-white border border-slate-200 shadow-sm rounded-3xl p-8 mb-8 space-y-5">
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Judul Artikel</label>
-            <input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="Contoh: Rukun Islam Lengkap" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10 transition-all" />
+            <label className="block text-sm font-bold text-slate-700 mb-2">Judul PPT / Bahan Tayang</label>
+            <input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="Contoh: PPT Bab 1 - Rukun Islam" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 transition-all" />
           </div>
-          
-          <div className="flex gap-4">
-            <button type="button" onClick={() => setUploadType('markdown')} className={`flex flex-1 items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border transition-all ${uploadType==='markdown' ? 'bg-teal-50 border-teal-200 text-teal-600 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}><FileText className="w-4 h-4" /> Tulis Manual (Teks)</button>
-            <button type="button" onClick={() => setUploadType('file')} className={`flex flex-1 items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border transition-all ${uploadType==='file' ? 'bg-blue-50 border-blue-200 text-blue-600 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'}`}><FolderUp className="w-4 h-4" /> Upload File Materi (PDF/Word)</button>
-          </div>
-
           <div>
-            {uploadType === 'markdown' ? (
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">Isi Artikel (Markdown)</label>
-                <textarea required={uploadType === 'markdown'} value={content} onChange={e=>setContent(e.target.value)} placeholder="Tulis konten dengan format Markdown..." rows={12} className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm font-mono focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10 transition-all resize-none leading-relaxed" />
-              </div>
-            ) : (
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">Pilih File Materi</label>
-                <input required={uploadType === 'file'} type="file" onChange={e=>setFile(e.target.files?.[0]||null)} className="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-600 file:text-sm file:font-bold hover:file:bg-blue-100 transition-all" />
-              </div>
-            )}
+            <label className="block text-sm font-bold text-slate-700 mb-2">Pilih File (PDF/PPT/PPTX)</label>
+            <input required type="file" accept=".pdf,.ppt,.pptx" onChange={e=>setFile(e.target.files?.[0]||null)} className="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:bg-blue-50 file:text-blue-600 file:text-sm file:font-bold hover:file:bg-blue-100 transition-all" />
+            <p className="text-xs text-slate-500 mt-2">*Disarankan format PDF agar bisa langsung dibaca (di-embed) di dalam aplikasi.</p>
           </div>
-          
-          <button disabled={saving} type="submit" className="px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl text-sm shadow-md disabled:opacity-50 transition-all w-full sm:w-auto mt-4">
-            {saving ? 'Menyimpan...' : '✓ Publikasikan Artikel'}
+          <button disabled={saving} type="submit" className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm shadow-md disabled:opacity-50 transition-all w-full sm:w-auto mt-4">
+            {saving ? 'Mengunggah...' : '✓ Publikasikan PPT'}
           </button>
         </form>
       )}
 
       <div className="space-y-4">
         {materials.map(m => (
-          <div key={m.id} className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-teal-400 transition-colors">
+          <div key={m.id} className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-blue-400 transition-colors">
             <div>
               <h3 className="text-slate-900 font-bold text-lg mb-1">{m.title}</h3>
-              <p className="text-slate-500 text-sm mb-3">
-                {m.content_url ? '📄 Berisi Lampiran File Materi' : '📝 Artikel Teks (Manual)'}
-              </p>
+              <p className="text-slate-500 text-sm mb-3">📁 File Lampiran Bahan Tayang</p>
+              <span className="inline-block px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-lg">
+                {new Date(m.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'})}
+              </span>
+            </div>
+            {!isGuest && (
+              <button onClick={() => onDelete(m.id)} className="px-5 py-2.5 bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-100 rounded-xl text-sm font-semibold transition-all flex-shrink-0">
+                Hapus
+              </button>
+            )}
+          </div>
+        ))}
+        {materials.length === 0 && (
+          <div className="text-center py-16 bg-white border border-slate-200 rounded-3xl border-dashed">
+            <div className="flex justify-center mb-4 text-slate-300">
+              <BookOpenCheck className="w-12 h-12" />
+            </div>
+            <p className="text-slate-500 font-medium">Belum ada bahan tayang PPT. Klik tombol di atas untuk mengunggah!</p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/* ── Makalah (Modul Teks) ─────────────────────────────────────────────── */
+function MakalahTab({ materials, onDelete, onRefresh, isGuest }: { materials: Material[], onDelete: (id:string)=>void, onRefresh: ()=>void, isGuest: boolean }) {
+  const [showForm, setShowForm] = useState(false)
+  const [title, setTitle] = useState('')
+  const [file, setFile] = useState<File | null>(null)
+  const [saving, setSaving] = useState(false)
+
+  const save = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!file) return alert('Pilih file Makalah/Modul terlebih dahulu')
+    setSaving(true)
+    let content_url = null
+
+    const ext = file.name.split('.').pop()
+    const path = `${Date.now()}.${ext}`
+    const { error } = await supabase.storage.from('learning-files').upload(path, file)
+    if (!error) {
+      const { data } = supabase.storage.from('learning-files').getPublicUrl(path)
+      content_url = data.publicUrl
+    }
+
+    await supabase.from('materials').insert([{ title, description: '', type: 'makalah', content_url }])
+    setTitle(''); setFile(null); setShowForm(false)
+    onRefresh(); setSaving(false)
+  }
+
+  return (
+    <div className="anim-fade-in">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+          <FileText className="w-6 h-6 text-purple-500" /> Manajemen Modul / Makalah
+        </h2>
+        <button onClick={() => setShowForm(!showForm)} className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl text-sm transition-all shadow-sm">
+          {showForm ? '✕ Batal' : '+ Upload Makalah Baru'}
+        </button>
+      </div>
+      
+      {showForm && (
+        <form onSubmit={save} className="bg-white border border-slate-200 shadow-sm rounded-3xl p-8 mb-8 space-y-5">
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Judul Makalah / Modul</label>
+            <input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="Contoh: Modul Bacaan Hukum Tajwid" className="w-full px-5 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:outline-none focus:border-purple-500 focus:bg-white focus:ring-4 focus:ring-purple-500/10 transition-all" />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-slate-700 mb-2">Pilih File (PDF/Word)</label>
+            <input required type="file" accept=".pdf,.doc,.docx" onChange={e=>setFile(e.target.files?.[0]||null)} className="w-full text-sm text-slate-600 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:bg-purple-50 file:text-purple-600 file:text-sm file:font-bold hover:file:bg-purple-100 transition-all" />
+            <p className="text-xs text-slate-500 mt-2">*Disarankan format PDF agar bisa dibaca langsung di browser.</p>
+          </div>
+          <button disabled={saving} type="submit" className="px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl text-sm shadow-md disabled:opacity-50 transition-all w-full sm:w-auto mt-4">
+            {saving ? 'Mengunggah...' : '✓ Publikasikan Makalah'}
+          </button>
+        </form>
+      )}
+
+      <div className="space-y-4">
+        {materials.map(m => (
+          <div key={m.id} className="bg-white border border-slate-200 shadow-sm rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-purple-400 transition-colors">
+            <div>
+              <h3 className="text-slate-900 font-bold text-lg mb-1">{m.title}</h3>
+              <p className="text-slate-500 text-sm mb-3">📁 File Lampiran Makalah/Modul</p>
               <span className="inline-block px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-lg">
                 {new Date(m.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'})}
               </span>
@@ -304,7 +369,7 @@ function ArticlesTab({ materials, onDelete, onRefresh, isGuest }: { materials: M
             <div className="flex justify-center mb-4 text-slate-300">
               <FileText className="w-12 h-12" />
             </div>
-            <p className="text-slate-500 font-medium">Belum ada artikel. Klik tombol di atas untuk menulis!</p>
+            <p className="text-slate-500 font-medium">Belum ada makalah. Klik tombol di atas untuk mengunggah!</p>
           </div>
         )}
       </div>

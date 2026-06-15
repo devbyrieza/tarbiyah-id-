@@ -14,7 +14,7 @@ export type Material = {
   id: string
   title: string
   description: string
-  type: 'article' | 'video' | 'quiz' | 'document'
+  type: 'ppt' | 'makalah' | 'video' | 'article' | 'quiz' | 'document'
   content_url?: string
   content_text?: string
   thumbnail_url?: string

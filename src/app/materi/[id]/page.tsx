@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation'
 import { supabase, Material } from '@/lib/supabase'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
-import { ArrowLeft, Video, FileText, ArrowRight } from 'lucide-react'
+import { ArrowLeft, Video, FileText, ArrowRight, Presentation, BookOpen } from 'lucide-react'
 
 export default function MateriPage() {
   const { id } = useParams<{ id: string }>()
@@ -35,6 +35,38 @@ export default function MateriPage() {
     </div>
   )
 
+  // Color schemas based on material type
+  const getTypeBadgeStyles = () => {
+    switch (material.type) {
+      case 'video':
+        return {
+          container: 'bg-pink-50 text-pink-600 border-pink-200',
+          icon: <Video className="w-3.5 h-3.5" />,
+          label: 'Video Pembelajaran'
+        }
+      case 'ppt':
+        return {
+          container: 'bg-blue-50 text-blue-600 border-blue-200',
+          icon: <Presentation className="w-3.5 h-3.5" />,
+          label: 'Bahan Tayang (PPT)'
+        }
+      case 'makalah':
+        return {
+          container: 'bg-purple-50 text-purple-600 border-purple-200',
+          icon: <BookOpen className="w-3.5 h-3.5" />,
+          label: 'Modul & Makalah'
+        }
+      default:
+        return {
+          container: 'bg-slate-50 text-slate-600 border-slate-200',
+          icon: <FileText className="w-3.5 h-3.5" />,
+          label: 'Materi Pembelajaran'
+        }
+    }
+  }
+
+  const badgeStyles = getTypeBadgeStyles()
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       <div className="max-w-4xl mx-auto px-6 py-12">
@@ -43,10 +75,8 @@ export default function MateriPage() {
             <ArrowLeft className="w-4 h-4" /> Kembali ke Beranda
           </Link>
           <div className="flex gap-2">
-            <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border shadow-sm flex items-center gap-1.5 ${
-              material.type === 'video' ? 'bg-purple-50 text-purple-600 border-purple-200' : 'bg-blue-50 text-blue-600 border-blue-200'
-            }`}>
-              {material.type === 'video' ? <><Video className="w-3.5 h-3.5" /> Video Pembelajaran</> : <><FileText className="w-3.5 h-3.5" /> Artikel Materi</>}
+            <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border shadow-sm flex items-center gap-1.5 ${badgeStyles.container}`}>
+              {badgeStyles.icon} {badgeStyles.label}
             </span>
           </div>
         </div>
@@ -67,15 +97,17 @@ export default function MateriPage() {
             <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight leading-tight">{material.title}</h1>
             {material.description && <p className="text-slate-500 text-lg mb-8 leading-relaxed border-b border-slate-100 pb-8">{material.description}</p>}
             
-            {material.type === 'article' && material.content_url && (
+            {(material.type === 'ppt' || material.type === 'makalah' || material.type === 'article' || material.type === 'document') && material.content_url && (
               <div className="mb-8">
                 <div className="p-6 bg-blue-50 border border-blue-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm">
-                      <FileText className="w-6 h-6" />
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm flex-shrink-0">
+                      {material.type === 'ppt' ? <Presentation className="w-6 h-6 text-blue-600" /> : material.type === 'makalah' ? <BookOpen className="w-6 h-6 text-purple-600" /> : <FileText className="w-6 h-6 text-slate-600" />}
                     </div>
                     <div>
-                      <h3 className="font-bold text-slate-900">Lampiran Materi Utama</h3>
+                      <h3 className="font-bold text-slate-900">
+                        {material.type === 'ppt' ? 'Lampiran Bahan Tayang (PPT)' : material.type === 'makalah' ? 'Lampiran Modul & Makalah' : 'Lampiran Dokumen Utama'}
+                      </h3>
                       <p className="text-sm text-slate-600">Klik tombol di samping untuk mengunduh atau membaca dokumen.</p>
                     </div>
                   </div>
@@ -84,15 +116,19 @@ export default function MateriPage() {
                   </a>
                 </div>
                 
-                {material.content_url.toLowerCase().includes('.pdf') && (
+                {material.content_url.toLowerCase().includes('.pdf') ? (
                   <div className="mt-8 aspect-[1/1.4] w-full bg-slate-100 rounded-2xl overflow-hidden border border-slate-200">
                     <iframe src={material.content_url} className="w-full h-full" />
                   </div>
-                )}
+                ) : (material.content_url.toLowerCase().endsWith('.ppt') || material.content_url.toLowerCase().endsWith('.pptx') || material.content_url.toLowerCase().endsWith('.doc') || material.content_url.toLowerCase().endsWith('.docx')) ? (
+                  <div className="mt-8 aspect-[4/3] w-full bg-slate-100 rounded-2xl overflow-hidden border border-slate-200">
+                    <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(material.content_url)}&embedded=true`} className="w-full h-full" />
+                  </div>
+                ) : null}
               </div>
             )}
 
-            {material.type === 'article' && material.content_text && (
+            {material.content_text && (
               <div className="prose prose-lg prose-slate prose-headings:text-slate-900 prose-headings:font-bold prose-p:text-slate-700 prose-li:text-slate-700 prose-a:text-teal-600 max-w-none">
                 <ReactMarkdown>{material.content_text}</ReactMarkdown>
               </div>
