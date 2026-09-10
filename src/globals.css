@@ -187,3 +187,46 @@ input::-moz-selection, textarea::-moz-selection {
   color: #ffffff !important;
 }
 
+
+
+/* Sidebar Scroll Isolation:
+   When pointer is over sidebar, scrolling stays inside sidebar and NEVER leaks to body */
+aside,
+[data-sidebar="true"],
+.app-sidebar,
+nav[aria-label*="sidebar" i],
+.sidebar-nav {
+  overscroll-behavior: contain !important;
+  overscroll-behavior-y: contain !important;
+}
+
+/* Modal, Dialog & Pop-up Scroll Isolation:
+   When pointer is inside modal/dialog/backdrop/swal, scrolling stays inside modal */
+[role="dialog"],
+[aria-modal="true"],
+[data-modal="true"],
+.modal-backdrop,
+.modal-container,
+.swal2-container,
+.swal2-popup {
+  overscroll-behavior: contain !important;
+  overscroll-behavior-y: contain !important;
+}
+
+/* Universal Background Scroll Lock when Modal / Dialog is active */
+html:has([role="dialog"]),
+html:has([aria-modal="true"]),
+html:has([data-modal="true"]),
+html:has(.modal-backdrop),
+html:has(.modal-container),
+html:has(.swal2-container),
+html.swal2-shown,
+body:has([role="dialog"]),
+body:has([aria-modal="true"]),
+body:has([data-modal="true"]),
+body:has(.modal-backdrop),
+body:has(.modal-container),
+body:has(.swal2-popup),
+body.swal2-shown {
+  overflow: hidden !important;
+}
