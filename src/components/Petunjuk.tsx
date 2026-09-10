@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import { useEffect, useRef } from 'react'
 import { BookOpen, MessageSquare, FileSignature } from 'lucide-react'
 

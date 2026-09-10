@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import { useEffect, useRef, useState } from 'react'
 import { fireConfetti, playCorrect, playWrong, playWin } from '@/lib/utils'
 

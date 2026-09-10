@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import { useEffect, useRef } from 'react'
 import { MoonStar, BookOpenText, ShieldCheck, Bird, Hourglass } from 'lucide-react'
 

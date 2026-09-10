@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import { useState, useRef, useEffect } from 'react'
 import { fireConfetti, playCorrect, playWrong, playWin } from '@/lib/utils'
 import { supabase, LeaderboardEntry } from '@/lib/supabase'

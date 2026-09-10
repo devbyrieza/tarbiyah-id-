@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import { useState, useRef, useEffect } from 'react'
 import { GraduationCap, Sparkles, HeartHandshake, AlertTriangle, Library } from 'lucide-react'
 

@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import { useState, useEffect } from 'react'
 import { supabase, ForumPost } from '@/lib/supabase'
 import Navbar from '@/components/Navbar'

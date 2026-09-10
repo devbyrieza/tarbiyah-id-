@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import { useEffect, useState } from 'react'
 import { supabase, QuizResult } from '@/lib/supabase'
 import Link from 'next/link'
