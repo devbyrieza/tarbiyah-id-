@@ -68,7 +68,7 @@ export default function ForumPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
+    <div className="min-h-dvh bg-slate-50 font-sans">
       <Navbar />
       <div className="pt-24 pb-12 bg-white border-b border-slate-200">
         <div className="max-w-4xl mx-auto px-6 text-center">

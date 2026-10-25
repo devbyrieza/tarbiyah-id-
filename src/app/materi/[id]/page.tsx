@@ -22,13 +22,13 @@ export default function MateriPage() {
   }, [id])
 
   if (loading) return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+    <div className="min-h-dvh bg-slate-50 flex items-center justify-center">
       <div className="w-12 h-12 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin"></div>
     </div>
   )
 
   if (!material) return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+    <div className="min-h-dvh bg-slate-50 flex items-center justify-center p-6">
       <div className="bg-white p-8 rounded-3xl border border-slate-200 text-center shadow-sm max-w-sm w-full">
         <p className="text-slate-600 mb-6">Materi tidak ditemukan.</p>
         <Link href="/" className="px-6 py-3 bg-teal-600 text-white rounded-xl font-bold">Kembali ke Beranda</Link>
@@ -80,7 +80,7 @@ export default function MateriPage() {
   const fileExt = material.content_url ? getFileExtension(material.content_url) : ''
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
+    <div className="min-h-dvh bg-slate-50 font-sans">
       <div className="max-w-4xl mx-auto px-6 py-12">
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <Link href="/" className="text-slate-500 hover:text-teal-600 font-bold text-sm transition-colors flex items-center gap-2">

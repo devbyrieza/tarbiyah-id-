@@ -32,7 +32,7 @@ export default function DashboardPage() {
   const perfect = results.filter(r => r.score === 5).length
 
   return (
-    <div className="min-h-screen bg-[#0a1612] text-[#eaf4ee] p-8 font-jakarta">
+    <div className="min-h-dvh bg-[#0a1612] text-[#eaf4ee] p-8 font-jakarta">
       {/* Header */}
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-8 flex-wrap gap-4">

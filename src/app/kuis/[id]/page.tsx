@@ -87,13 +87,13 @@ export default function KuisPage() {
   }
 
   if (loading) return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+    <div className="min-h-dvh bg-slate-50 flex items-center justify-center">
       <div className="w-12 h-12 border-4 border-amber-200 border-t-amber-500 rounded-full animate-spin"></div>
     </div>
   )
 
   if (!quiz) return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+    <div className="min-h-dvh bg-slate-50 flex items-center justify-center p-6">
       <div className="bg-white p-8 rounded-3xl border border-slate-200 text-center shadow-sm max-w-sm w-full">
         <p className="text-slate-600 mb-6">Kuis tidak ditemukan.</p>
         <Link href="/" className="px-6 py-3 bg-teal-600 text-white rounded-xl font-bold">Kembali</Link>
@@ -102,7 +102,7 @@ export default function KuisPage() {
   )
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-6 font-sans">
+    <div className="min-h-dvh bg-slate-50 py-12 px-6 font-sans">
       <div className="max-w-3xl mx-auto">
         <div className="mb-8 flex items-center justify-between">
           <Link href="/" className="text-slate-500 hover:text-teal-600 font-bold text-sm transition-colors flex items-center gap-2">

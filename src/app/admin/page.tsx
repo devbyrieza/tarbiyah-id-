@@ -66,7 +66,7 @@ export default function AdminDashboard() {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
+    <div className="min-h-dvh bg-slate-50 flex flex-col md:flex-row">
       {/* Sidebar / Topbar */}
       <aside className="w-full md:w-64 bg-white border-b md:border-b-0 md:border-r border-slate-200 flex flex-col flex-shrink-0">
         <div className="p-4 md:p-6 border-b border-slate-200 flex justify-between items-center md:block">
