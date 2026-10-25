@@ -100,10 +100,10 @@ export default function AdminDashboard() {
           ))}
         </nav>
         <div className="hidden md:block p-4 border-t border-slate-200 space-y-2 mt-auto">
-          <a href="/" target="_blank" className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all border border-transparent">
+          <a href="/" target="_blank" className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all border border-transparent" rel="noopener noreferrer">
             <Globe className="w-4 h-4" /> Lihat Website
           </a>
-          <a href="/forum" target="_blank" className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all border border-transparent">
+          <a href="/forum" target="_blank" className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all border border-transparent" rel="noopener noreferrer">
             <MessageCircle className="w-4 h-4" /> Buka Forum
           </a>
           <button onClick={logout} className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-100 transition-all">
